@@ -1,0 +1,540 @@
+{
+  "packet_id": "R02",
+  "sources": {
+    "pdf_read": "dev/PDF_output/R02_pdf_read/R02_pdf_read.json",
+    "custom_checklist": "dev/PDF_output/R02_pdf_read/R02_custom_checklist.json"
+  },
+  "recommendation": "maybe",
+  "decision_rule_applied": "No item is not_met, but 21 items are pending (17 required items plus 4 if_available items), so the recommendation is maybe. The files present meet every criterion they cover; missing or incomplete files stand in the way.",
+  "escalate": false,
+  "confidence": "low",
+  "patient": {
+    "age_group": "adult",
+    "age": "73",
+    "referral_reason": "Right leg cellulitis / right leg pain; recently homeless",
+    "care_setting": "emergency department, no inpatient admission – applied as ED (CalAIM form 'Currently in Hospital? Yes' read as in the ED at referral)"
+  },
+  "patient_summary": "73-year-old woman (adult criteria) referred from the emergency department; she was not admitted (face sheet: Patient Class Emergency, inpatient admit N/A). EMS brought her from a grocery store parking lot. She reports being homeless for about 5 days, has no emergency contact, and has Medicare plus CalOptima Medi-Cal. Referral reason: right leg cellulitis, shin to toes. She was on oral doxycycline for 8 days and has felt 'sicker' for 2 days; in the ED she got IV cefepime, vancomycin and an LR bolus. Afebrile (36.6 C), HR 72, RR 16, SpO2 98% on room air, BP 178/79 on losartan. WBC 7.46, lactate 0.8, procalcitonin 0.10 (flagged), flu/RSV/COVID NAAT negative (date redacted), CXR without acute findings. PMH: paroxysmal AF s/p ablation, asthma, OSA on CPAP, bipolar 1, schizophrenia, GERD/Barrett, anemia, back injury. AOx4. Forms report independent ADLs, 100 ft with a seated walker and self-administered meds. Missing or open: blood/urine culture results, right foot X-ray and LE venous duplex (pending), 5 sets of vitals, a confirmed ECG read, PT/OT and psych notes marked as attached, and a discharge/antibiotic/home-health plan (MDM, impression and disposition are unfilled templates). Contradictions: apixaban status, walking ability, and IV antibiotics (form 'No' vs given in ED). No psychiatric medications are listed.",
+  "counts": { "met": 12, "not_met": 0, "pending": 21, "not_applicable": 7 },
+  "items": [
+    {
+      "item_id": "CK-01",
+      "name": "Illumination Health + Home referral form",
+      "rule_ids": ["DOC-1"],
+      "rule_kind": "document",
+      "checklist_status": "incomplete",
+      "verdict": "pending",
+      "evidence": [ { "quote": "LA/OC REFERRAL FORM", "page": 3 } ],
+      "reason": "An older Illumination Foundation LA/OC form was sent instead of the current RC0725 form, so the front-page screening items (medically/psychiatrically stable, AAOx4, 100 ft) are not on it.",
+      "could_change_if": "The referrer completes the current RC0725 referral form with its front-page screening checklist."
+    },
+    {
+      "item_id": "CK-02",
+      "name": "Client's demographic page (face sheet)",
+      "rule_ids": ["DOC-2"],
+      "rule_kind": "document",
+      "checklist_status": "received",
+      "verdict": "met",
+      "evidence": [ { "quote": "Patient Class: Emergency ... Inp Admit Date/Time: N/A N/A", "page": 2 } ],
+      "reason": "Face sheet is present.",
+      "could_change_if": ""
+    },
+    {
+      "item_id": "CK-03",
+      "name": "CalOptima form / LOA / authorization",
+      "rule_ids": ["DOC-3"],
+      "rule_kind": "document",
+      "checklist_status": "received",
+      "verdict": "met",
+      "evidence": [ { "quote": "CalOptima Health — CalAIM Recuperative Care/ Short-Term Post Hospitalization Referral/Authorization Request", "page": 4 } ],
+      "reason": "CalAIM Recuperative Care referral/authorization request is present (5 pages). The acceptance section is for IHH to complete.",
+      "could_change_if": ""
+    },
+    {
+      "item_id": "CK-04",
+      "name": "H&P (History and Physical)",
+      "rule_ids": ["DOC-4"],
+      "rule_kind": "document",
+      "checklist_status": "incomplete",
+      "verdict": "pending",
+      "evidence": [
+        { "quote": "This is a 73 y.o. female who presents to the ED for ***", "page": 21 },
+        { "quote": "IMPRESSION: *** No diagnosis found. ... ED Disposition: None. ED Prescriptions: None.", "page": 21 }
+      ],
+      "reason": "The ED provider note serves as the H&P, but its decision-making, impression and disposition are unfilled templates, so there is no documented diagnosis or discharge plan.",
+      "could_change_if": "The finished ED provider note is sent with impression, MDM and disposition filled in."
+    },
+    {
+      "item_id": "CK-05",
+      "name": "Current progress notes (if needed)",
+      "rule_ids": ["DOC-5"],
+      "rule_kind": "document",
+      "checklist_status": "not_required",
+      "verdict": "not_applicable",
+      "evidence": [],
+      "reason": "Checklist marked not required for an ED-only referral; the unfinished ED note is tracked under CK-04.",
+      "could_change_if": ""
+    },
+    {
+      "item_id": "CK-06",
+      "name": "Updated vitals (last 24 hours)",
+      "rule_ids": ["DOC-6"],
+      "rule_kind": "document",
+      "checklist_status": "received",
+      "verdict": "met",
+      "evidence": [ { "quote": "Patient Vitals for the past 24 hrs: BP 178/79 Temp 36.6 °C (97.9 °F) Oral Pulse 72 Resp 16 SpO2 98 %", "page": 19 } ],
+      "reason": "A set of vitals from the last 24 hours is present (timestamp redacted). The 5-set requirement is judged under CK-15/CK-20.",
+      "could_change_if": ""
+    },
+    {
+      "item_id": "CK-07",
+      "name": "Medication list",
+      "rule_ids": ["DOC-7"],
+      "rule_kind": "document",
+      "checklist_status": "incomplete",
+      "verdict": "pending",
+      "evidence": [
+        { "quote": "apixaban (ELIQUIS) 5 mg tablet — Take 1 tablet by mouth 2 times daily", "page": 16 },
+        { "quote": "ED Prescriptions: None", "page": 21 }
+      ],
+      "reason": "Only the home (PTA) list is present; no discharge medication list, no discharge antibiotic, and apixaban status is contradictory.",
+      "could_change_if": "A discharge medication list is sent, including the discharge antibiotic and confirmed apixaban status."
+    },
+    {
+      "item_id": "CK-08",
+      "name": "PT/OT or nursing notes",
+      "rule_ids": ["DOC-8"],
+      "rule_kind": "document",
+      "checklist_status": "received",
+      "verdict": "met",
+      "evidence": [ { "quote": "Patient is able to independently manage her own ADLS and ambulate 100ft with the assistance of her walker.", "page": 9 } ],
+      "reason": "An ED RN note is present, which satisfies 'PT/OT or nursing notes'. PT/OT notes are judged separately under CK-11.",
+      "could_change_if": ""
+    },
+    {
+      "item_id": "CK-09",
+      "name": "Blood or wound culture results",
+      "rule_ids": ["DOC-9", "ID-Q2"],
+      "rule_kind": "document",
+      "checklist_status": "missing",
+      "verdict": "pending",
+      "evidence": [
+        { "quote": "Culture, Blood [redacted] Order Status: Sent Specimen: Peripheral Blood", "page": 11 },
+        { "quote": "Urinalysis, Reflex Microscopic and/or Culture ... Order Status: Sent", "page": 19 }
+      ],
+      "reason": "Blood cultures x2 and a urine culture were sent; no results are in the packet.",
+      "could_change_if": "Culture results are sent. Positive blood cultures could change the infection assessment."
+    },
+    {
+      "item_id": "CK-10",
+      "name": "30-day supply of all medications",
+      "rule_ids": ["DOC-10"],
+      "rule_kind": "document",
+      "checklist_status": "incomplete",
+      "verdict": "pending",
+      "evidence": [ { "quote": "Does member have enough medication to last through the end of the month? [X] YES", "page": 7 } ],
+      "reason": "Only an attestation to the end of the month (not necessarily 30 days); no supply list or prescriptions, and the discharge antibiotic is not named.",
+      "could_change_if": "Confirmation of a 30-day supply of all medications, including the discharge antibiotic."
+    },
+    {
+      "item_id": "CK-11",
+      "name": "PT/OT notes",
+      "rule_ids": ["MOB-2"],
+      "rule_kind": "document",
+      "checklist_status": "missing",
+      "verdict": "pending",
+      "evidence": [
+        { "quote": "Attached Docs: ... [X] PT/OT Eval.", "page": 3 },
+        { "quote": "Pt is able to bear some weight.", "page": 14 }
+      ],
+      "reason": "The referral form marks the PT/OT evaluation as attached, but it is not in the packet. Walking ability is contradictory (100 ft with walker p9 vs partial weight bearing and difficulty walking p14), so mobility cannot be confirmed.",
+      "could_change_if": "The PT/OT evaluation is sent showing 100 ft with her walker at modified independence."
+    },
+    {
+      "item_id": "CK-12",
+      "name": "MRSA swab, documented negative",
+      "rule_ids": ["INF-1"],
+      "rule_kind": "document",
+      "checklist_status": "not_required",
+      "verdict": "not_applicable",
+      "evidence": [ { "quote": "Patient Class: Emergency ... Inp Admit Date/Time: N/A N/A", "page": 2 } ],
+      "reason": "Required only for inpatient referrals; this is an ED referral. Becomes required if she is admitted.",
+      "could_change_if": ""
+    },
+    {
+      "item_id": "CK-13",
+      "name": "COVID swab negative within 24 h of admission",
+      "rule_ids": ["INF-2"],
+      "rule_kind": "document",
+      "checklist_status": "not_required",
+      "verdict": "not_applicable",
+      "evidence": [ { "quote": "SARS-CoV-2, NAAT (COVID-19) Negative", "page": 10 } ],
+      "reason": "Required only for inpatient referrals; ED referral. A negative NAAT is present (collection time redacted).",
+      "could_change_if": ""
+    },
+    {
+      "item_id": "CK-14",
+      "name": "TB status (form-only exclusion)",
+      "rule_ids": ["FORM-X4"],
+      "rule_kind": "exclude",
+      "checklist_status": "received",
+      "verdict": "met",
+      "evidence": [
+        { "quote": "PPD/TB test or Chest XRAY performed? [X] yes ... Results: Neg", "page": 3 },
+        { "quote": "TB Test or Chest X-Ray Performed? [X] YES ... Results: [ ] Positive [X] Negative", "page": 6 },
+        { "quote": "Impression: No acute thoracic abnormality.", "page": 12 }
+      ],
+      "reason": "TB screen negative on both forms and CXR clear; no MRSA or C. diff infection documented. Excluded condition absent.",
+      "could_change_if": ""
+    },
+    {
+      "item_id": "CK-15",
+      "name": "Last 5 sets of vital signs",
+      "rule_ids": ["ID-1"],
+      "rule_kind": "document",
+      "checklist_status": "incomplete",
+      "verdict": "pending",
+      "evidence": [ { "quote": "Patient Vitals for the past 24 hrs: BP 178/79 Temp 36.6 °C (97.9 °F) Oral Pulse 72 Resp 16 SpO2 98 %", "page": 19 } ],
+      "reason": "Only one set of vitals (afebrile, HR 72, BP 178/79, no signs of sepsis in that set); five sets are required to rule out sepsis trends.",
+      "could_change_if": "Four more timed sets of vitals are sent without fever, tachycardia or hypotension."
+    },
+    {
+      "item_id": "CK-16",
+      "name": "Able to self-administer oral antibiotics; discharge antibiotic plan",
+      "rule_ids": ["ID-2"],
+      "rule_kind": "must",
+      "checklist_status": "incomplete",
+      "verdict": "pending",
+      "evidence": [
+        { "quote": "Self Administer All Meds? [X] Yes", "page": 3 },
+        { "quote": "has been on a course of Doxycycline for 8 days", "page": 14 },
+        { "quote": "ED Prescriptions: None", "page": 21 }
+      ],
+      "reason": "She self-administers meds and took oral doxycycline, but she worsened on it, received IV antibiotics in the ED, and no discharge antibiotic is named or prescribed.",
+      "could_change_if": "The referrer names the oral discharge antibiotic (drug, dose, duration) and confirms she has the prescription."
+    },
+    {
+      "item_id": "CK-17",
+      "name": "Location of infection",
+      "rule_ids": ["ID-Q1"],
+      "rule_kind": "ask",
+      "checklist_status": "received",
+      "verdict": "met",
+      "evidence": [
+        { "quote": "Erythema to the right anterior shin that is blanchable. Slightly hot to touch.", "page": 17 },
+        { "quote": "Qualifying diagnosis: right leg cellulitis", "page": 6 }
+      ],
+      "reason": "Location answered: right leg (shin to toes). Onset dates are inconsistent (1 month vs 8 days, p14) but the location is clear.",
+      "could_change_if": ""
+    },
+    {
+      "item_id": "CK-18",
+      "name": "Isolation status",
+      "rule_ids": ["ID-Q3", "OTH-4"],
+      "rule_kind": "exclude",
+      "checklist_status": "missing",
+      "verdict": "pending",
+      "evidence": [ { "quote": "Communicable Diseases/Isolation describe: (blank)", "page": 7 } ],
+      "reason": "Isolation status is not stated anywhere (flu/RSV/COVID NAAT negative, p10).",
+      "could_change_if": "The referrer confirms she is not on isolation (or that isolation has been cleared)."
+    },
+    {
+      "item_id": "CK-19",
+      "name": "Home health to maintain IV and give IV antibiotics (if IV therapy continues)",
+      "rule_ids": ["ID-3", "OTH-3", "INT-E3"],
+      "rule_kind": "conditional",
+      "checklist_status": "cannot_determine",
+      "verdict": "pending",
+      "evidence": [
+        { "quote": "cefepime (MAXIPIME) 2 g in sterile water 20 mL syringe 2 g Intravenous Given", "page": 12 },
+        { "quote": "IV Antibiotics: [ ] YES [X] NO", "page": 7 },
+        { "quote": "Service: [ ] PT [ ] OT [ ] Speech [ ] Wound Care", "page": 6 }
+      ],
+      "reason": "IV antibiotics were given in the ED but the CalAIM form says no IV antibiotics; disposition is blank and no home health is ordered. If_available item: needed only if IV therapy continues.",
+      "could_change_if": "Confirmation that IV therapy ends at the ED, or a home health order to maintain the IV and give the medication."
+    },
+    {
+      "item_id": "CK-20",
+      "name": "Last 5 vitals; BP stable 24 h on oral medication",
+      "rule_ids": ["CARD-1"],
+      "rule_kind": "document",
+      "checklist_status": "incomplete",
+      "verdict": "pending",
+      "evidence": [
+        { "quote": "BP: 178/79", "page": 16 },
+        { "quote": "losartan (COZAAR) 50 mg tablet Take 1 tablet by mouth Daily", "page": 16 }
+      ],
+      "reason": "One BP reading (178/79) on oral losartan; 24-hour stability cannot be shown from one set.",
+      "could_change_if": "More BP readings over 24 hours showing stable BP on oral medication."
+    },
+    {
+      "item_id": "CK-21",
+      "name": "At least 3 troponins with at least 2 negative",
+      "rule_ids": ["CARD-2"],
+      "rule_kind": "document",
+      "checklist_status": "not_required",
+      "verdict": "not_applicable",
+      "evidence": [],
+      "reason": "No troponin was drawn; the rule applies only if one was.",
+      "could_change_if": ""
+    },
+    {
+      "item_id": "CK-22",
+      "name": "EKG results",
+      "rule_ids": ["CARD-3"],
+      "rule_kind": "document",
+      "checklist_status": "incomplete",
+      "verdict": "pending",
+      "evidence": [
+        { "quote": "ECG 12 lead (Preliminary result) ... INTERPRETATION TEXT: Not Confirmed", "page": 12 },
+        { "quote": "EKG reviewed and interpreted by me: ... Rate: *** Rhythm: [redacted] Interpretation: (blank)", "page": 20 }
+      ],
+      "reason": "ECG was done, but the read is preliminary/unconfirmed, the provider template is blank, and the rhythm is redacted (redaction does not fail the rule).",
+      "could_change_if": "The confirmed (final) EKG interpretation is sent."
+    },
+    {
+      "item_id": "CK-23",
+      "name": "Anticoagulation self-management and lab plan",
+      "rule_ids": ["CARD-4"],
+      "rule_kind": "must",
+      "checklist_status": "incomplete",
+      "verdict": "pending",
+      "evidence": [
+        { "quote": "apixaban (ELIQUIS) 5 mg tablet Take 1 tablet by mouth 2 times daily.", "page": 16 },
+        { "quote": "was on Eliquis for 6 months for clotting and was taken off it recently when her blood clot cleared.", "page": 14 },
+        { "quote": "Anticoagulants?: [X] No", "page": 3 }
+      ],
+      "reason": "AF history, but whether she is on apixaban is contradictory within the chart itself (med list vs HPI) and with the forms; no chart evidence settles it, and self-management is not documented.",
+      "could_change_if": "Clarification of current apixaban status and, if on it, confirmation she can manage it independently."
+    },
+    {
+      "item_id": "CK-24",
+      "name": "Ejection fraction with stated baseline",
+      "rule_ids": ["CARD-5"],
+      "rule_kind": "exclude",
+      "checklist_status": "missing",
+      "verdict": "pending",
+      "evidence": [ { "quote": "TRANSESOPHAGEAL ECHOCARDIOGRAM Procedure: ECHO - TRANSESEOPHAGEAL / CARDIOVERSION", "page": 15 } ],
+      "reason": "No EF value; prior TEE listed without results. If_available item; no low EF is suggested (normal cardiac silhouette on CXR, p12).",
+      "could_change_if": "A recent EF of 25% or higher stated as her baseline."
+    },
+    {
+      "item_id": "CK-25",
+      "name": "No IV blood-pressure medications in last 24 h",
+      "rule_ids": ["CARD-6"],
+      "rule_kind": "exclude",
+      "checklist_status": "received",
+      "verdict": "met",
+      "evidence": [ { "quote": "Medication Administration - last 24 hours ... cefepime ... lactated ringers (LR) bolus ... vancomycin in saline IVPB", "page": 12 } ],
+      "reason": "24-hour MAR shows no IV antihypertensives. Excluded condition absent.",
+      "could_change_if": ""
+    },
+    {
+      "item_id": "CK-26",
+      "name": "Post-CABG/valve: H/H, EF, home health, surgery follow-up",
+      "rule_ids": ["CIR-E5"],
+      "rule_kind": "conditional",
+      "checklist_status": "not_required",
+      "verdict": "not_applicable",
+      "evidence": [],
+      "reason": "No CABG or valve surgery in surgical history.",
+      "could_change_if": ""
+    },
+    {
+      "item_id": "CK-27",
+      "name": "Chest imaging",
+      "rule_ids": ["RESP-1"],
+      "rule_kind": "document",
+      "checklist_status": "received",
+      "verdict": "met",
+      "evidence": [ { "quote": "XR Chest AP Portable (Final result) ... Impression: No acute thoracic abnormality.", "page": 12 } ],
+      "reason": "Chest X-ray present and clear.",
+      "could_change_if": ""
+    },
+    {
+      "item_id": "CK-28",
+      "name": "Last 5 vitals with SpO2 and stated baseline",
+      "rule_ids": ["RESP-2"],
+      "rule_kind": "document",
+      "checklist_status": "incomplete",
+      "verdict": "pending",
+      "evidence": [ { "quote": "SpO2 98 % O2 Device room air", "page": 13 } ],
+      "reason": "One SpO2 reading (98% RA), no baseline stated. If_available item.",
+      "could_change_if": "Additional timed SpO2 readings."
+    },
+    {
+      "item_id": "CK-29",
+      "name": "Hospital O2 order and tank delivered day before arrival",
+      "rule_ids": ["RESP-3"],
+      "rule_kind": "conditional",
+      "checklist_status": "not_required",
+      "verdict": "not_applicable",
+      "evidence": [ { "quote": "Requires O2? [ ] Yes [X] No", "page": 3 } ],
+      "reason": "No oxygen required.",
+      "could_change_if": ""
+    },
+    {
+      "item_id": "CK-30",
+      "name": "Respiratory therapy notes",
+      "rule_ids": ["RESP-4"],
+      "rule_kind": "document",
+      "checklist_status": "missing",
+      "verdict": "pending",
+      "evidence": [],
+      "reason": "No RT notes (none expected for an ED visit without a respiratory complaint). If_available item.",
+      "could_change_if": "RT notes sent if any exist."
+    },
+    {
+      "item_id": "CK-31",
+      "name": "Breathing treatments and antibiotics for respiratory condition",
+      "rule_ids": ["RESP-Q1", "RESP-Q2"],
+      "rule_kind": "ask",
+      "checklist_status": "received",
+      "verdict": "met",
+      "evidence": [
+        { "quote": "Levalbuterol Tartrate (XOPENEX HFA INHAL) — Inhale 2 puffs into the lungs EVERY 4 TO 6 HOURS AS NEEDED (Exacerbation of asthma)", "page": 16 },
+        { "quote": "Sleep apnea USES CPAP MACHINE", "page": 15 }
+      ],
+      "reason": "Answered: PRN levalbuterol inhaler and CPAP; no breathing treatments on the ED MAR; antibiotics are for cellulitis, not a respiratory condition.",
+      "could_change_if": ""
+    },
+    {
+      "item_id": "CK-32",
+      "name": "Trach self-care, eating and speaking valve",
+      "rule_ids": ["RSP-E6"],
+      "rule_kind": "conditional",
+      "checklist_status": "not_required",
+      "verdict": "not_applicable",
+      "evidence": [],
+      "reason": "No tracheostomy.",
+      "could_change_if": ""
+    },
+    {
+      "item_id": "CK-33",
+      "name": "Documentation of psychiatric stability on medications",
+      "rule_ids": ["MH-1"],
+      "rule_kind": "must",
+      "checklist_status": "incomplete",
+      "verdict": "pending",
+      "evidence": [
+        { "quote": "Psychiatric: Affect normal, judgment normal, mood normal", "page": 17 },
+        { "quote": "Mental Health DX: No behavorial needs identified [X] Bipolar ... [X] Schizophrenia ... [ ] Current treatment:", "page": 7 },
+        { "quote": "Attached Docs: ... [X] Psych notes", "page": 3 }
+      ],
+      "reason": "Bipolar 1 and schizophrenia are documented with a normal ED psych exam (partly redacted), but no psychiatric medication or treatment is listed and the psych notes marked as attached are absent. Stability on medications cannot be confirmed; the chart does not show instability.",
+      "could_change_if": "Psych notes and current psychiatric medication/treatment are sent showing stability."
+    },
+    {
+      "item_id": "CK-34",
+      "name": "Suicidal ideation screen",
+      "rule_ids": ["MH-2"],
+      "rule_kind": "exclude",
+      "checklist_status": "missing",
+      "verdict": "pending",
+      "evidence": [],
+      "reason": "Neither the forms nor the ED note address suicidal ideation.",
+      "could_change_if": "A documented negative SI screen."
+    },
+    {
+      "item_id": "CK-35",
+      "name": "Hallucination status",
+      "rule_ids": ["MH-3"],
+      "rule_kind": "exclude",
+      "checklist_status": "incomplete",
+      "verdict": "pending",
+      "evidence": [ { "quote": "[ ] Auditory/Visual Hallucinations", "page": 3 } ],
+      "reason": "Only an unchecked form box; no clinical assessment of command hallucinations in a patient with schizophrenia.",
+      "could_change_if": "A clinical note documenting no command auditory or visual hallucinations."
+    },
+    {
+      "item_id": "CK-36",
+      "name": "Conservatorship / FSP status",
+      "rule_ids": ["MH-5"],
+      "rule_kind": "exclude",
+      "checklist_status": "missing",
+      "verdict": "pending",
+      "evidence": [ { "quote": "1. *No Contact Specified* 2. *No Contact Specified*", "page": 2 } ],
+      "reason": "Conservatorship/FSP history is not addressed anywhere; no guardian is listed on the face sheet, which does not settle it.",
+      "could_change_if": "Referrer confirms she has never been under or qualified for a conservatorship or Full Service Partnership."
+    },
+    {
+      "item_id": "SW-01",
+      "name": "Exclusion sweep: osteomyelitis (right foot X-ray pending)",
+      "rule_ids": ["MSK-X2"],
+      "rule_kind": "exclude",
+      "checklist_status": "cannot_determine",
+      "verdict": "pending",
+      "evidence": [
+        { "quote": "XR Foot Right 3 + Vw (Results Pending)", "page": 21 },
+        { "quote": "VAS Lower Extremity Venous Bilateral (Results Pending)", "page": 21 }
+      ],
+      "reason": "Not on the checklist. Osteomyelitis is ineligible; the right foot X-ray (and the venous duplex) were pending at referral, so it is neither shown nor ruled out.",
+      "could_change_if": "Final foot X-ray shows no osteomyelitis (and the venous duplex result is sent)."
+    },
+    {
+      "item_id": "SW-02",
+      "name": "Exclusion sweep: aggression toward staff or patients",
+      "rule_ids": ["OTH-1"],
+      "rule_kind": "exclude",
+      "checklist_status": "received",
+      "verdict": "met",
+      "evidence": [
+        { "quote": "NO behavioral issues identified.", "page": 3 },
+        { "quote": "Mental Health DX: No behavorial needs identified", "page": 7 }
+      ],
+      "reason": "No aggression documented anywhere in the packet.",
+      "could_change_if": ""
+    },
+    {
+      "item_id": "SW-03",
+      "name": "Exclusion sweep: unstable cardiac arrhythmia",
+      "rule_ids": ["CIR-X1"],
+      "rule_kind": "exclude",
+      "checklist_status": "received",
+      "verdict": "met",
+      "evidence": [ { "quote": "Cardiovascular: Well perfused, normal rhythm, no murmurs.", "page": 16 } ],
+      "reason": "Paroxysmal AF s/p ablation; normal rhythm on exam, HR 72. No unstable arrhythmia documented (final EKG read still requested under CK-22).",
+      "could_change_if": ""
+    },
+    {
+      "item_id": "SW-04",
+      "name": "Exclusion sweep: substance use / refusing detox (form-only)",
+      "rule_ids": ["FORM-X5"],
+      "rule_kind": "exclude",
+      "checklist_status": "received",
+      "verdict": "met",
+      "evidence": [
+        { "quote": "SUBSTANCE ABUSE? [X] None ... Current withdrawals: [X] No", "page": 3 },
+        { "quote": "Drug use: Not Currently", "page": 16 }
+      ],
+      "reason": "No substance use or detox refusal documented.",
+      "could_change_if": ""
+    }
+  ],
+  "not_met_reasons": [],
+  "pending_requests": [
+    "Current IHH referral form (RC0725) with the front-page screening checklist (CK-01).",
+    "Finished ED provider note with impression, MDM and disposition filled in (CK-04).",
+    "Discharge medication list, including the oral discharge antibiotic (name, dose, duration) and prescription, and confirmation of a 30-day supply of all medications (CK-07, CK-10, CK-16).",
+    "Blood culture (x2) and urine culture results (CK-09).",
+    "PT/OT evaluation marked as attached, showing 100 ft with her walker at modified independence (CK-11).",
+    "Last 5 timed sets of vital signs, including BP readings showing stability on oral losartan over 24 hours and SpO2 (CK-15, CK-20, CK-28).",
+    "Isolation status: confirm she is not on isolation (CK-18).",
+    "Whether IV antibiotics or IV access continue after the ED; if so, the home health order (CK-19, if_available).",
+    "Confirmed (final) EKG interpretation (CK-22).",
+    "Current apixaban (Eliquis) status and, if on it, confirmation she manages it independently and the follow-up plan (CK-23).",
+    "Psych notes marked as attached and current psychiatric medication/treatment for bipolar 1 and schizophrenia (CK-33).",
+    "Suicidal ideation screen and command-hallucination assessment with results (CK-34, CK-35).",
+    "Conservatorship / Full Service Partnership history (CK-36).",
+    "Final right foot X-ray (osteomyelitis) and bilateral leg venous duplex results (SW-01).",
+    "If available: ejection fraction with baseline (CK-24) and respiratory therapy notes (CK-30)."
+  ],
+  "unclear_rules_used": [],
+  "next_steps": [
+    "Send the pending-request list above to the referring ED case manager and hold the referral open (the rules have no 're-refer when ready' outcome; workup was incomplete at referral).",
+    "Confirm she is being discharged directly from the ED; if she is admitted, add a negative MRSA swab and a COVID swab within 24 hours of arrival.",
+    "On re-review, deny-level risks to check first: foot X-ray for osteomyelitis, culture results / vitals for sepsis, SI and command hallucinations, conservatorship/FSP history, and whether IV antibiotics continue without home health.",
+    "Note for clinical review: the cellulitis worsened on oral doxycycline and IV antibiotics were started in the ED; the eligible-condition rule covers cellulitis requiring oral antibiotics, so the discharge antibiotic route matters."
+  ],
+  "disclaimer": "Recommendation only. IHH staff make the final admission decision."
+}

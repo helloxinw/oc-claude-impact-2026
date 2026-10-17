@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Referral Intake Portal</title>
+<style>
+:root{--ink:#0f172a;--mute:#64748b;--line:#e2e8f0;--bg:#f8fafc;--brand:#0f766e}
+*{box-sizing:border-box}
+body{margin:0;font:14px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--ink);background:var(--bg)}
+header{background:#0f172a;color:#fff;padding:18px 32px;display:flex;align-items:center;justify-content:space-between}
+header h1{margin:0;font-size:19px}header span{color:#94a3b8;font-size:12.5px}
+main{max-width:1320px;margin:0 auto;padding:24px 32px 64px;display:grid;grid-template-columns:330px 1fr;gap:22px;align-items:start}
+.card{background:#fff;border:1px solid var(--line);border-radius:12px;padding:20px 22px;margin-bottom:18px}
+h2{margin:0 0 4px;font-size:16px}.sub{margin:0 0 14px;color:var(--mute);font-size:13px}
+.drop{border:2px dashed #cbd5e1;border-radius:10px;padding:28px 16px;text-align:center;cursor:pointer;transition:.15s}
+.drop.over{border-color:var(--brand);background:#f0fdfa}.drop b{display:block;font-size:15px;margin-bottom:4px}
+.drop .file{margin-top:10px;font-weight:600;color:var(--brand)}
+input[type=file]{display:none}
+label.chk{display:flex;gap:8px;align-items:center;margin:12px 0;font-size:13px;color:#334155}
+button{background:var(--brand);color:#fff;border:0;border-radius:8px;padding:10px 16px;font-weight:600;font-size:14px;cursor:pointer;width:100%}
+button:disabled{background:#94a3b8;cursor:not-allowed}
+.err{color:#b91c1c;font-size:13px;margin-top:10px}.note{color:var(--mute);font-size:12.5px}
+.past{list-style:none;padding:0;margin:0}.past li{display:flex;justify-content:space-between;align-items:center;padding:8px 10px;border-radius:8px;cursor:pointer}
+.past li:hover,.past li.sel{background:#f1f5f9}
+.badge{display:inline-block;border-radius:999px;padding:2px 10px;font-size:11.5px;font-weight:700;text-transform:uppercase;letter-spacing:.04em}
+.approve{background:#dcfce7;color:#166534}.deny{background:#fee2e2;color:#991b1b}.maybe{background:#fef3c7;color:#92400e}
+.running{background:#dbeafe;color:#1e40af}.error{background:#f1f5f9;color:#475569}
+.stages{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:6px 0 16px}
+.stage{border:1px solid var(--line);border-radius:10px;padding:12px 14px;position:relative}
+.stage .n{font-size:11px;font-weight:700;color:var(--mute);text-transform:uppercase;letter-spacing:.05em}
+.stage b{display:block;margin:2px 0}.stage .a{font-size:11.5px;color:var(--mute);font-family:ui-monospace,Menlo,monospace}
+.stage.done{border-color:#86efac;background:#f0fdf4}.stage.running{border-color:#93c5fd;background:#eff6ff}
+.stage .st{position:absolute;top:12px;right:12px;font-size:12px;font-weight:600}
+.stage.done .st{color:#166534}.stage.running .st{color:#1e40af}.stage.pending .st{color:#94a3b8}
+.spin{display:inline-block;width:11px;height:11px;border:2px solid #93c5fd;border-top-color:#1e40af;border-radius:50%;animation:s 0.8s linear infinite;vertical-align:-1px}
+@keyframes s{to{transform:rotate(360deg)}}
+.log{background:#0f172a;color:#cbd5e1;border-radius:10px;padding:12px 14px;font:12px/1.6 ui-monospace,Menlo,monospace;max-height:220px;overflow:auto;white-space:pre-wrap}
+.log .t{color:#64748b}
+.banner{border-radius:12px;padding:20px 24px;display:flex;gap:22px;align-items:center;margin-bottom:16px}
+.banner .rec{font-size:32px;font-weight:800}.banner p{margin:2px 0}
+.stats{display:flex;gap:10px;margin:0 0 14px;flex-wrap:wrap}.stat{border-radius:8px;padding:8px 14px;font-size:12.5px}.stat b{display:block;font-size:20px}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+ul.r{margin:0;padding-left:18px}ul.r li{margin:4px 0}
+h3{font-size:13px;text-transform:uppercase;letter-spacing:.05em;color:var(--mute);margin:16px 0 6px}
+.links a{display:inline-block;margin:0 10px 8px 0;padding:7px 12px;border:1px solid var(--line);border-radius:8px;color:#1d4ed8;text-decoration:none;font-weight:600;font-size:13px}
+.links a:hover{background:#eff6ff}
+iframe{width:100%;height:900px;border:1px solid var(--line);border-radius:10px;background:#fff}
+.tabs{display:flex;gap:6px;margin-bottom:10px}.tabs button{width:auto;background:#f1f5f9;color:#334155;padding:7px 12px;font-size:13px}
+.tabs button.on{background:#0f172a;color:#fff}
+.disc{font-size:12.5px;color:#475569;background:#f1f5f9;border-radius:8px;padding:9px 13px;margin-bottom:16px}
+.empty{text-align:center;color:var(--mute);padding:60px 20px}
+</style>
+</head>
+<body>
+<header><h1>Referral Intake Portal</h1><span>Local only · recommendations, not decisions · IHH staff make the final call</span></header>
+<main>
+  <div>
+    <div class="card">
+      <h2>Upload a referral packet</h2>
+      <p class="sub">The file name becomes the packet ID (e.g. <b>R02.pdf</b> → R02).</p>
+      <div class="drop" id="drop"><b>Drop a PDF here</b><span class="note">or click to choose a file</span><div class="file" id="fname"></div></div>
+      <input type="file" id="file" accept="application/pdf,.pdf">
+      <label class="chk"><input type="checkbox" id="force"> Re-run even if results already exist</label>
+      <button id="go" disabled>Run intake pipeline</button>
+      <div class="err" id="err"></div>
+      <p class="note" style="margin-top:12px">Runs three Claude agents in the background: read the PDF, build the patient's checklist, then recommend. A packet takes several minutes.</p>
+    </div>
+    <div class="card">
+      <h2>Packets</h2>
+      <ul class="past" id="past"><li class="note">No results yet.</li></ul>
+    </div>
+  </div>
+
+  <div id="panel">
+    <div class="card empty" id="empty">Upload a packet, or pick one from the list, to see its pipeline run and recommendation.</div>
+    <div id="run" style="display:none">
+      <div class="card">
+        <h2 id="title">Packet</h2>
+        <p class="sub" id="status"></p>
+        <div class="stages" id="stages"></div>
+        <div class="log" id="log" style="display:none"></div>
+      </div>
+      <div class="card" id="result" style="display:none"></div>
+    </div>
+  </div>
+</main>
+
+<script>
+const $ = (id) => document.getElementById(id);
+const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const REC = {
+  approve: ['Approve', '#166534', '#dcfce7', 'All applicable criteria are met and nothing is missing.'],
+  deny:   ['Deny',   '#991b1b', '#fee2e2', 'The files present show at least one criterion is not met.'],
+  maybe:  ['Maybe',  '#92400e', '#fef3c7', 'The files present meet the criteria, but required files are missing.'],
+};
+let current = null, timer = null, chosen = null;
+
+// ---- upload ----
+const drop = $('drop'), fileInput = $('file');
+drop.onclick = () => fileInput.click();
+drop.ondragover = (e) => { e.preventDefault(); drop.classList.add('over'); };
+drop.ondragleave = () => drop.classList.remove('over');
+drop.ondrop = (e) => { e.preventDefault(); drop.classList.remove('over'); pick(e.dataTransfer.files[0]); };
+fileInput.onchange = () => pick(fileInput.files[0]);
+function pick(f) {
+  $('err').textContent = '';
+  if (!f) return;
+  if (!/\.pdf$/i.test(f.name)) { $('err').textContent = 'Please choose a PDF file.'; return; }
+  chosen = f; $('fname').textContent = f.name; $('go').disabled = false;
+}
+$('go').onclick = async () => {
+  if (!chosen) return;
+  $('go').disabled = true; $('err').textContent = '';
+  const body = new FormData();
+  body.append('file', chosen);
+  body.append('force', $('force').checked ? 'true' : 'false');
+  try {
+    const res = await fetch('/api/packets', { method: 'POST', body });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Upload failed');
+    if (data.note) $('err').textContent = data.note;
+    show(data.packet_id);
+    loadPast();
+  } catch (e) { $('err').textContent = e.message; }
+  finally { $('go').disabled = false; }
+};
+
+// ---- packet list ----
+async function loadPast() {
+  const { packets, active } = await (await fetch('/api/packets')).json();
+  const ids = new Set(packets.map((p) => p.packet_id));
+  const rows = packets.map((p) => `<li data-id="${esc(p.packet_id)}" class="${p.packet_id === current ? 'sel' : ''}"><b>${esc(p.packet_id)}</b><span class="badge ${esc(p.recommendation)}">${esc(p.recommendation)}</span></li>`);
+  active.filter((id) => !ids.has(id)).forEach((id) => rows.unshift(`<li data-id="${esc(id)}"><b>${esc(id)}</b><span class="badge running">running</span></li>`));
+  $('past').innerHTML = rows.join('') || '<li class="note">No results yet.</li>';
+  $('past').querySelectorAll('li[data-id]').forEach((li) => li.onclick = () => show(li.dataset.id));
+}
+
+// ---- run view ----
+function show(pid) {
+  current = pid; clearTimeout(timer);
+  history.replaceState(null, '', `?packet=${encodeURIComponent(pid)}`);
+  $('empty').style.display = 'none'; $('run').style.display = '';
+  $('result').style.display = 'none'; $('result').innerHTML = '';
+  $('title').textContent = `Packet ${pid}`;
+  poll();
+}
+async function poll() {
+  const pid = current;
+  const job = await (await fetch(`/api/jobs/${encodeURIComponent(pid)}`)).json();
+  if (pid !== current) return;
+  const mins = job.elapsed != null ? ` · ${Math.floor(job.elapsed / 60)}m ${job.elapsed % 60}s` : '';
+  const labels = { queued: 'Queued…', running: 'Running in the background', done: 'Finished', error: 'Stopped with an error', none: 'Not run yet' };
+  $('status').innerHTML = `<span class="badge ${job.status === 'done' ? 'approve' : job.status === 'error' ? 'deny' : 'running'}">${esc(job.status)}</span> ${esc(labels[job.status] || '')}${mins}` +
+    (job.error ? `<div class="err">${esc(job.error)}</div>` : '');
+  $('stages').innerHTML = job.stages.map((s, i) => `<div class="stage ${s.state}"><div class="n">Stage ${i + 1}</div><b>${esc(s.label)}</b><div class="a">${esc(s.agent)}</div>` +
+    `<span class="st">${s.state === 'done' ? '✓ done' : s.state === 'running' ? '<span class="spin"></span> running' : 'waiting'}</span></div>`).join('');
+  const log = $('log');
+  if (job.events && job.events.length) {
+    log.style.display = '';
+    const stick = log.scrollTop + log.clientHeight >= log.scrollHeight - 20;
+    log.innerHTML = job.events.map((e) => `<span class="t">[${String(Math.floor(e.t / 60)).padStart(2, '0')}:${String(e.t % 60).padStart(2, '0')}]</span> ${esc(e.text)}`).join('\n');
+    if (stick) log.scrollTop = log.scrollHeight;
+  } else log.style.display = 'none';
+  if (job.status === 'done') { renderResult(pid); loadPast(); return; }
+  if (job.status === 'queued' || job.status === 'running') timer = setTimeout(poll, 2500);
+}
+
+async function renderResult(pid) {
+  const res = await fetch(`/api/packets/${encodeURIComponent(pid)}/decision`);
+  if (!res.ok) return;
+  const d = await res.json();
+  const [label, fg, bg, meaning] = REC[d.recommendation] || ['?', '#334155', '#f1f5f9', ''];
+  const c = d.counts || {};
+  const list = (items) => items && items.length ? `<ul class="r">${items.map((i) => `<li>${esc(i)}</li>`).join('')}</ul>` : '<p class="note">None.</p>';
+  const base = `/output/${encodeURIComponent(pid)}_pdf_read/${encodeURIComponent(pid)}`;
+  const pages = [['intake_decision', 'Recommendation'], ['custom_checklist', 'Custom checklist'], ['pdf_read', 'Packet report']];
+  const p = d.patient || {};
+  $('result').innerHTML = `
+    <div class="banner" style="background:${bg};color:${fg}"><div class="rec">${label}</div>
+      <div><p><b>${esc(meaning)}</b></p><p>${esc(d.decision_rule_applied)}</p><p>Confidence: ${esc(d.confidence)}${d.escalate ? ' · <b>Escalate for clinical review</b>' : ''}</p></div></div>
+    <div class="disc">${esc(d.disclaimer)}</div>
+    <p class="note">${esc(p.age_group)}, ${esc(p.age)} · referred for ${esc(p.referral_reason)} · care setting: ${esc(p.care_setting)}</p>
+    <div class="stats">
+      <div class="stat deny"><b>${c.not_met ?? 0}</b>Not met</div><div class="stat maybe"><b>${c.pending ?? 0}</b>Pending (missing)</div>
+      <div class="stat approve"><b>${c.met ?? 0}</b>Met</div><div class="stat error"><b>${c.not_applicable ?? 0}</b>Not applicable</div></div>
+    <div class="cols"><div><h3>Why: criteria not met</h3>${list(d.not_met_reasons)}<h3>Next steps</h3>${list(d.next_steps)}</div>
+      <div><h3>Still missing — request from referrer</h3>${list(d.pending_requests)}</div></div>
+    <h3>Full pages</h3>
+    <div class="tabs">${pages.map(([k, l], i) => `<button data-src="${base}_${k}.html" class="${i === 0 ? 'on' : ''}">${l}</button>`).join('')}
+      <a class="note" style="margin-left:auto;align-self:center" id="newtab" target="_blank" href="${base}_intake_decision.html">Open in new tab ↗</a></div>
+    <iframe id="frame" src="${base}_intake_decision.html" title="Pipeline output"></iframe>`;
+  $('result').style.display = '';
+  $('result').querySelectorAll('.tabs button').forEach((b) => b.onclick = () => {
+    $('result').querySelectorAll('.tabs button').forEach((x) => x.classList.toggle('on', x === b));
+    $('frame').src = b.dataset.src; $('newtab').href = b.dataset.src;
+  });
+}
+
+loadPast();
+const linked = new URLSearchParams(location.search).get('packet');
+if (linked) show(linked);
+</script>
+</body>
+</html>
