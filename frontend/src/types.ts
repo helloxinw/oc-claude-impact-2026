@@ -2,7 +2,13 @@ export type ReferralStatus = 'new' | 'needs_info' | 'ready_for_review' | 'accept
 export type AiDecision = 'yes' | 'no' | 'maybe'
 export type DocumentStatus = 'uploaded' | 'processing' | 'processed' | 'failed'
 export type FindingCategory = 'extraction' | 'eligibility_rule' | 'missing_document' | 'decision'
-export type FindingVerdict = 'met' | 'not_met' | 'unclear' | 'present' | 'present_unclear' | 'missing'
+// Eligibility rules: met / not_met / unclear / not_applicable / pending_arrangement (a conditional
+// rule whose arrangement isn't confirmed yet). `ask` questions: answered / unanswered, never pass/fail.
+// Checklist documents: present / present_unclear / missing.
+export type FindingVerdict =
+  | 'met' | 'not_met' | 'unclear' | 'not_applicable' | 'pending_arrangement'
+  | 'answered' | 'unanswered'
+  | 'present' | 'present_unclear' | 'missing'
 
 export interface Referral {
   id: string

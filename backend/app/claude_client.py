@@ -12,6 +12,7 @@ from typing import Any
 
 import anthropic
 
+from app.criteria import UNSCORED_KINDS, RuleInfo, always_applicable_rule_ids, condition_groups, rule_index
 from app.pdf_extract import PageContent
 
 MODEL = os.environ.get('ANTHROPIC_MODEL', 'claude-sonnet-5-5')
@@ -192,19 +193,28 @@ CLASSIFICATION_TOOL = {
                     'required': ['doc_id', 'reason'],
                 },
             },
+            'patient_conditions': {
+                'type': 'array',
+                'description': 'Every condition group (from the list in the prompt) that this patient’s '
+                                'documented diagnoses fall under. This decides which diagnosis-specific rules '
+                                'and questions get evaluated, so list a group only if the patient actually has '
+                                'a condition in it, and do not leave out one they do have.',
+                'items': {
+                    'type': 'object',
+                    'properties': {
+                        'group': {'type': 'string', 'description': 'Exactly one of the condition group names given in the prompt.'},
+                        'diagnosis': {'type': 'string', 'description': 'The diagnosis from the packet that puts the patient in this group, as a short phrase.'},
+                    },
+                    'required': ['group', 'diagnosis'],
+                },
+            },
             'rule_verdicts': {
                 'type': 'array',
-                'description': 'One entry per admission-criteria rule evaluated. Always-applicable rules '
-                                '(every rule in `general`; every `rules` entry whose section is ADLs, Mobility, '
-                                'Mental Health, Cognition, Other Factors, End of life care, or Infection Control; '
-                                'FORM-X4; FORM-X5) must each get an entry even where nothing was found '
-                                '(value_found null, verdict "unclear"). Diagnosis-specific rules (the `rules` '
-                                'entries under Diabetes, Infection, Respiratory Illness, Cardiac, and every '
-                                '`by_system` entry) get an entry ONLY if that condition/body system is actually '
-                                'present in this patient’s diagnoses — skip them entirely otherwise, do '
-                                'not pad the list with verdicts for conditions the patient doesn’t have. '
-                                'Keep value_found and reasoning to one short sentence each (a phrase is fine) so '
-                                'the full list fits the response budget.',
+                'description': 'One entry per pass/fail rule evaluated: every always-applicable rule id listed in '
+                                'the prompt, plus the rules of each group in patient_conditions as the prompt '
+                                'describes. Never include `ask` or `note` rules here. Keep value_found and '
+                                'reasoning to one short sentence each (a phrase is fine) so the full list fits '
+                                'the response budget.',
                 'items': {
                     'type': 'object',
                     'properties': {
@@ -215,7 +225,15 @@ CLASSIFICATION_TOOL = {
                                             'verdict is based on (e.g. "Ambulates 100+ ft with walker, modified '
                                             'independence, p.8"). Null if nothing relevant was found.',
                         },
-                        'verdict': {'type': 'string', 'enum': ['met', 'not_met', 'unclear']},
+                        'verdict': {
+                            'type': 'string',
+                            'enum': ['met', 'not_met', 'unclear', 'not_applicable', 'pending_arrangement'],
+                            'description': 'Always read as "is the patient OK on this rule", per the kind '
+                                            'mapping in the prompt. not_applicable: the rule’s own trigger or '
+                                            'condition does not hold for this patient. pending_arrangement: '
+                                            'conditional rules only — the trigger is present but the required '
+                                            'arrangement is not yet confirmed in the packet.',
+                        },
                         'reasoning': {
                             'type': 'string',
                             'description': 'One short sentence: why value_found does or does not satisfy this '
@@ -233,14 +251,51 @@ CLASSIFICATION_TOOL = {
                     'required': ['rule_id', 'value_found', 'verdict', 'reasoning'],
                 },
             },
+            'question_answers': {
+                'type': 'array',
+                'description': 'One entry per `ask` rule in each group listed in patient_conditions. These are '
+                                'questions IHH wants answered, never pass/fail: record what the packet says, '
+                                'or null if it does not answer the question.',
+                'items': {
+                    'type': 'object',
+                    'properties': {
+                        'rule_id': {'type': 'string'},
+                        'answer': {
+                            'type': ['string', 'null'],
+                            'description': 'One short phrase answering the question from the packet. Null if the packet does not say.',
+                        },
+                        'evidence_page': {'type': 'integer'},
+                        'quote': {
+                            'type': ['string', 'null'],
+                            'description': 'A short verbatim OCR snippet (3-12 words) from evidence_page, as for rule_verdicts. Null if answer is null.',
+                        },
+                    },
+                    'required': ['rule_id', 'answer'],
+                },
+            },
         },
-        'required': ['overall_decision', 'overall_reasoning', 'flags_for_human_review', 'missing_documents', 'rule_verdicts'],
+        'required': [
+            'overall_decision', 'overall_reasoning', 'flags_for_human_review', 'missing_documents',
+            'patient_conditions', 'rule_verdicts', 'question_answers',
+        ],
     },
 }
 
 
+def _condition_groups_text(criteria: dict[str, Any], index: dict[str, RuleInfo]) -> str:
+    lines = []
+    for group in condition_groups(criteria):
+        rules = [r for r in index.values() if r.group == group]
+        scored = ', '.join(r.id for r in rules if r.kind not in UNSCORED_KINDS)
+        questions = ', '.join(r.id for r in rules if r.kind == 'ask')
+        kind = 'by_system condition list' if rules and rules[0].by_system else 'rules section'
+        lines.append(f'- {group} ({kind}): {scored}' + (f'; questions: {questions}' if questions else ''))
+    return '\n'.join(lines)
+
+
 def classify_referral(extraction: dict[str, Any], criteria: dict[str, Any]) -> dict[str, Any]:
     client = _get_client()
+    index = rule_index(criteria)
     instructions = (
         "You are an eligibility-screening assistant for Illumination Health + Home's recuperative "
         "care program, helping (never replacing) a human referral coordinator. Below is the admission "
@@ -254,25 +309,59 @@ def classify_referral(extraction: dict[str, Any], criteria: dict[str, Any]) -> d
         "satisfies mobility; tuberculosis and refusal of detox are exclusions from the referral form "
         "(FORM-X4, FORM-X5) even though this outline is silent on them — evaluate those two as "
         "ordinary exclude-type rule_verdicts alongside everything else.\n\n"
-        "rule_verdicts must cover every rule in `general`, every `rules` entry whose section is ADLs, "
-        "Mobility, Mental Health, Cognition, Other Factors, End of life care, or Infection Control, plus "
-        "FORM-X4 and FORM-X5 — these apply to every patient regardless of diagnosis, so include all of "
-        "them even where nothing relevant was found (value_found null, verdict \"unclear\", reasoning "
-        "explains it wasn't documented). Separately, identify this patient's diagnosed condition(s) from "
-        "the extracted facts, and evaluate the Diabetes/Infection/Respiratory Illness/Cardiac rules "
-        "within `rules`, and the eligible/ineligible entries under `by_system`, ONLY for the body "
-        "system(s)/condition(s) this patient actually has — e.g. do not evaluate any Respiratory Illness "
-        "or Respiratory by_system rule unless the patient has a respiratory diagnosis. Leave rule_verdicts "
-        "entirely out for every disease-specific rule that doesn't relate to a condition this patient has; "
-        "do not mark them \"unclear\" or \"not_met\" just to cover the list. Never guess a fact that isn't "
-        "in the extracted data. "
-        "Compare documents_present against the checklist for missing_documents. overall_decision is "
-        "\"no\" only when a must/exclude rule is clearly violated outside of a flagged case-by-case "
-        "item; \"maybe\" when anything required is unclear, undocumented, or flagged for human review; "
-        "\"yes\" only when every must rule is met, no exclusion applies, and nothing is flagged. There are "
-        "roughly 50 rules to cover, so keep every rule_verdicts entry brief (a short phrase for value_found, "
-        "one short sentence for reasoning) — the full list must fit in the response. Call "
-        "record_classification once with your full reasoning.\n\n"
+        "WHICH RULES TO COVER. These apply to every patient regardless of diagnosis; each must get a "
+        "rule_verdicts entry even where nothing relevant was found (value_found null, verdict "
+        "\"unclear\" if the rule applies but the packet doesn't settle it):\n"
+        f"{', '.join(always_applicable_rule_ids(index))}\n"
+        "Then identify the patient's diagnosed condition(s) from the extracted facts and record each "
+        "matching condition group in patient_conditions. The condition groups and their rule ids are:\n"
+        f"{_condition_groups_text(criteria, index)}\n"
+        "For each group in patient_conditions: a \"rules section\" group gets a rule_verdicts entry for "
+        "every one of its rules (not_applicable where a rule's own condition doesn't hold), plus a "
+        "question_answers entry for every one of its questions. A \"by_system condition list\" group "
+        "lists specific conditions, so give verdicts only for the entries that match or could match "
+        "this patient's condition(s); leave out entries about conditions the patient plainly doesn't "
+        "have. Leave every group not in patient_conditions out entirely — no verdicts, no answers. "
+        "Never guess a fact that isn't in the extracted data.\n\n"
+        "HOW EACH KIND MAPS TO A VERDICT. A verdict always reads \"is the patient OK on this rule\":\n"
+        "- must: met / not_met / unclear. not_applicable only when the rule opens with a condition "
+        "that doesn't hold for this patient (e.g. MOB-4 for a patient who isn't wheelchair dependent, "
+        "MH-4 when not admitted with acute alcohol intoxication, CARD-4 with no atrial fibrillation).\n"
+        "- exclude: met = checked and the exclusion does not apply; not_met = the exclusion applies; "
+        "unclear = the packet doesn't say.\n"
+        "- document: met = sent in the packet; not_met = not sent; not_applicable when the rule's own "
+        "condition doesn't hold (e.g. \"if coming from inpatient\" for an ED referral, \"if patient had "
+        "a troponin\" when none was drawn).\n"
+        "- conditional (allowed only if an arrangement is confirmed before admission — OTH-3, EOL-1, "
+        "DM-4, ID-3, RESP-3, and the by_system entries marked conditional): not_applicable when the "
+        "triggering situation isn't present (no IV access/IV medication, not a hospice patient, no "
+        "oxygen requirement, not an ED referral of a poorly controlled diabetic). Treat a trigger as "
+        "absent when the packet says so, or when it would be documented (orders, medication list, "
+        "lines, nursing notes) and appears nowhere; use unclear only when the packet hints it might be "
+        "present but is ambiguous. pending_arrangement when the trigger IS present but the arrangement "
+        "(home health, hospice services, PCP follow-up and glucose plan, oxygen tank, wound care, PT, "
+        "etc.) isn't confirmed in the packet. met when the trigger is present and the arrangement is "
+        "confirmed. not_met only when the packet shows the arrangement can't or won't happen.\n"
+        "- ask: never a verdict. Answer it in question_answers instead.\n"
+        "- note: never a verdict; a human_review note goes in flags_for_human_review when it applies.\n"
+        "- general (GEN-1..3) is any-of: the patient needs at least one met. Evaluate each honestly; "
+        "once one is met the others don't affect overall_decision.\n"
+        "- by_system eligible entries (no kind of their own): met if the patient's condition fits; "
+        "unclear if it might. Eligible entries marked conditional follow the conditional mapping. "
+        "by_system ineligible entries are exclusions for that specific condition: not_met if the "
+        "patient has it, unclear if they might, not_applicable if they plainly don't.\n\n"
+        "OVERALL DECISION. Compare documents_present against the checklist for missing_documents. "
+        "overall_decision is \"no\" only when a must rule is clearly not_met or an exclusion clearly "
+        "applies, outside of a flagged case-by-case item. Otherwise \"maybe\" if any must/exclude/"
+        "document/general rule is unclear, any document is not sent, any conditional rule is "
+        "pending_arrangement (the arrangement must be confirmed before admission), any checklist "
+        "document is missing, or anything is flagged for human review. Otherwise \"yes\". "
+        "not_applicable verdicts and question_answers (answered or not) never move overall_decision "
+        "in either direction — a rule that doesn't apply, or a question the packet leaves open, is "
+        "not a reason for \"maybe\".\n\n"
+        "Keep every rule_verdicts and question_answers entry brief (a short phrase for value_found/"
+        "answer, one short sentence for reasoning; a few words is enough for not_applicable) — the full "
+        "list must fit in the response. Call record_classification once with your full reasoning.\n\n"
         f"ADMISSION CRITERIA JSON:\n{json.dumps(criteria)}\n\n"
         f"EXTRACTED FACTS:\n{json.dumps(extraction)}"
     )

@@ -31,6 +31,9 @@ def _page_labels(extraction: dict[str, Any], classification: dict[str, Any]) -> 
     for rule in classification.get('rule_verdicts', []):
         add(rule.get('evidence_page'), rule['rule_id'])
 
+    for answer in classification.get('question_answers', []):
+        add(answer.get('evidence_page'), answer['rule_id'])
+
     return pages
 
 
