@@ -128,7 +128,7 @@ export function QueuePage() {
               {!loading && visible.length === 0 && <TableRow><TableCell colSpan={6} className="h-28 text-center text-sm text-muted-foreground">No matching referrals.</TableCell></TableRow>}
             </TableBody>
           </Table>
-          <div className="flex items-center justify-between border-t px-5 py-3 text-xs text-muted-foreground"><span>Showing {visible.length} of {referrals.length} referrals</span><span>Fictional demo data</span></div>
+          <div className="flex items-center justify-between border-t px-5 py-3 text-xs text-muted-foreground"><span>Showing {visible.length} of {referrals.length} referrals</span></div>
         </Card>
 
         <footer className="flex flex-wrap justify-between gap-2 border-t pt-5 text-xs text-muted-foreground"><span>ReferralFlow · Hackathon prototype</span><span>No PHI, authentication, or production security controls</span></footer>
@@ -137,9 +137,9 @@ export function QueuePage() {
 
     <Dialog open={formOpen} onOpenChange={(open) => { if (!busy) { setFormOpen(open); if (!open) setPacketFile(null) } }}>
       <DialogContent>
-        <DialogHeader><DialogTitle>New referral</DialogTitle><DialogDescription>Create a fictional referral and, optionally, attach its packet now so extraction starts right away. Do not enter real patient information.</DialogDescription></DialogHeader>
+        <DialogHeader><DialogTitle>New referral</DialogTitle><DialogDescription>Create a referral and, optionally, attach its packet now so extraction starts right away. Do not enter real patient information.</DialogDescription></DialogHeader>
         <form className="mt-5 space-y-4" onSubmit={createReferral}>
-          <div className="space-y-2"><Label htmlFor="patient-alias">Fictional patient alias</Label><Input id="patient-alias" required minLength={2} maxLength={80} value={newReferral.patient_alias} onChange={(e) => setNewReferral((p) => ({ ...p, patient_alias: e.target.value }))} placeholder="Demo patient D"/></div>
+          <div className="space-y-2"><Label htmlFor="patient-alias">Patient Name</Label><Input id="patient-alias" required minLength={2} maxLength={80} value={newReferral.patient_alias} onChange={(e) => setNewReferral((p) => ({ ...p, patient_alias: e.target.value }))} placeholder="Demo patient D"/></div>
           <div className="space-y-2"><Label htmlFor="hospital">Hospital</Label><Input id="hospital" required minLength={2} maxLength={120} value={newReferral.hospital_name} onChange={(e) => setNewReferral((p) => ({ ...p, hospital_name: e.target.value }))} placeholder="Example Hospital"/></div>
           <div className="space-y-2"><Label htmlFor="reason">Reason for referral</Label><Textarea id="reason" required minLength={2} maxLength={3000} rows={3} value={newReferral.reason} onChange={(e) => setNewReferral((p) => ({ ...p, reason: e.target.value }))} placeholder="Recovery needs and outstanding documentation..."/></div>
           <div className="space-y-2">
