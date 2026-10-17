@@ -1,5 +1,5 @@
 import { useEffect, useState, type ChangeEvent } from 'react'
-import { AlertTriangle, Check, CheckCircle2, ChevronDown, CircleHelp, FileWarning, Loader2, ShieldAlert, Upload, XCircle } from 'lucide-react'
+import { AlertTriangle, Check, CheckCheck, CheckCircle2, ChevronDown, CircleHelp, FileWarning, Loader2, ShieldAlert, Upload, XCircle } from 'lucide-react'
 import { api } from '@/api'
 import { groupByCategory } from '@/lib/ruleCategory'
 import type { AiDecision, Finding, FindingVerdict, Referral, ReferralDocument } from '@/types'
@@ -83,6 +83,23 @@ export function DocumentReview({ referral, onReferralUpdated }: { referral: Refe
     setFindings((prev) => prev.map((f) => (f.id === updated.id ? updated : f)))
   }
 
+  const [bulkApproving, setBulkApproving] = useState(false)
+  const [bulkError, setBulkError] = useState('')
+
+  // Only "Met" verdicts are bulk-approvable; Not met / Unclear still need a one-by-one look.
+  async function approveAllMet(targets: Finding[]) {
+    setBulkApproving(true)
+    setBulkError('')
+    const results = await Promise.allSettled(targets.map((f) =>
+      api.reviewFinding(f.id, { verified: true, override_verdict: f.override_verdict, coordinator_note: f.coordinator_note ?? '' }),
+    ))
+    const approved = results.flatMap((r) => (r.status === 'fulfilled' ? [r.value] : []))
+    setFindings((prev) => prev.map((f) => approved.find((a) => a.id === f.id) ?? f))
+    const failed = results.length - approved.length
+    if (failed) setBulkError(`${failed} of ${results.length} could not be approved. Try again.`)
+    setBulkApproving(false)
+  }
+
   const latestDocument = documents[0]
   const patientSummary = findings.find((f) => f.key === 'patient_summary')
   const fields = findings.filter((f) => f.category === 'extraction' && f.key !== 'patient_summary' && !f.key.startsWith('document:'))
@@ -91,6 +108,7 @@ export function DocumentReview({ referral, onReferralUpdated }: { referral: Refe
     .sort((a, b) => (verdictOrder[a.verdict ?? 'met'] ?? 2) - (verdictOrder[b.verdict ?? 'met'] ?? 2))
   const flagFindings = findings.filter((f) => f.category === 'decision' && f.key.startsWith('flag:'))
   const reviewedCount = ruleFindings.filter((f) => f.verified).length
+  const unreviewedMet = ruleFindings.filter((f) => !f.verified && (f.override_verdict ?? f.verdict) === 'met')
   const ruleGroups = groupByCategory(ruleFindings)
 
   const activeFinding = findings.find((f) => f.id === activeFindingId) ?? null
@@ -167,6 +185,19 @@ export function DocumentReview({ referral, onReferralUpdated }: { referral: Refe
                   <div className="mb-3 rounded-lg border bg-muted/30 p-3">
                     <p className="mb-1 text-[11px] font-semibold uppercase tracking-widest text-muted-foreground">Summary</p>
                     <p className="text-xs leading-5">{patientSummary.value}</p>
+                  </div>
+                )}
+                {ruleFindings.length > 0 && (
+                  <div className="mb-3 flex flex-wrap items-center justify-between gap-2 rounded-lg border bg-card px-3 py-2">
+                    <p className="text-xs text-muted-foreground">
+                      {unreviewedMet.length
+                        ? <><b className="text-foreground">{unreviewedMet.length}</b> "Met" {unreviewedMet.length === 1 ? 'verdict' : 'verdicts'} not yet approved</>
+                        : reviewedCount === ruleFindings.length ? 'All criteria reviewed' : 'All "Met" verdicts approved. Review the rest one by one.'}
+                    </p>
+                    <Button size="sm" variant="outline" className="h-7 px-2.5 text-[11px]" disabled={bulkApproving || unreviewedMet.length === 0} onClick={() => void approveAllMet(unreviewedMet)}>
+                      {bulkApproving ? <Loader2 className="size-3 animate-spin" /> : <CheckCheck className="size-3" />}Approve all Met
+                    </Button>
+                    {bulkError && <p className="w-full text-[11px] text-red-700">{bulkError}</p>}
                   </div>
                 )}
                 {ruleGroups.map(({ category, items }) => (
@@ -363,6 +394,20 @@ function RuleRow({ finding, active, onClick, onReviewed }: { finding: Finding; a
     }
   }
 
+  // One-click approve/undo: keeps any existing override and note, only flips `verified`.
+  async function handleQuickReview(verified: boolean) {
+    setSaving(true)
+    setSaveError('')
+    try {
+      const updated = await api.reviewFinding(finding.id, { verified, override_verdict: finding.override_verdict, coordinator_note: finding.coordinator_note ?? '' })
+      onReviewed(updated)
+    } catch (e) {
+      setSaveError(e instanceof Error ? e.message : 'Failed to save')
+    } finally {
+      setSaving(false)
+    }
+  }
+
   return (
     <div className={`rounded-lg border transition-colors ${active ? 'border-primary/40 bg-primary/5 ring-1 ring-primary/30' : ''}`}>
       <div onClick={clickable ? onClick : undefined} className={clickable ? 'cursor-pointer p-2.5' : 'p-2.5'}>
@@ -382,9 +427,32 @@ function RuleRow({ finding, active, onClick, onReviewed }: { finding: Finding; a
         )}
       </div>
       <div className="border-t px-2.5 py-1.5" onClick={(e) => e.stopPropagation()}>
-        <button type="button" onClick={() => setExpanded((v) => !v)} className="text-[11px] font-medium text-primary hover:underline">
-          {expanded ? 'Close' : finding.verified ? 'Edit review' : 'Review this'}
-        </button>
+        <div className="flex items-center gap-3">
+          {!expanded && !finding.verified && (
+            <button
+              type="button"
+              onClick={() => void handleQuickReview(true)}
+              disabled={saving}
+              className="inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[11px] font-medium text-foreground hover:bg-muted/60 disabled:opacity-50"
+            >
+              {saving ? <Loader2 className="size-3 animate-spin" /> : <Check className="size-3" />}Approve
+            </button>
+          )}
+          <button type="button" onClick={() => setExpanded((v) => !v)} className="text-[11px] font-medium text-primary hover:underline">
+            {expanded ? 'Close' : finding.verified ? 'Edit review' : 'Review this'}
+          </button>
+          {!expanded && finding.verified && (
+            <button
+              type="button"
+              onClick={() => void handleQuickReview(false)}
+              disabled={saving}
+              className="text-[11px] text-muted-foreground hover:underline disabled:opacity-50"
+            >
+              Undo
+            </button>
+          )}
+        </div>
+        {!expanded && saveError && <p className="mt-1 text-[11px] text-red-700">{saveError}</p>}
         {expanded && (
           <div className="mt-2 space-y-2">
             <div className="flex flex-wrap items-center gap-1.5">
