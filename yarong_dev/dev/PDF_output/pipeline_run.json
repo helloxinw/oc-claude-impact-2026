@@ -1,0 +1,46 @@
+{
+  "packets": [
+    {
+      "packet_id": "R01",
+      "recommendation": "deny",
+      "confidence": "medium",
+      "escalate": false,
+      "counts": {
+        "met": 6,
+        "not_met": 1,
+        "pending": 15,
+        "not_applicable": 1
+      },
+      "age": "74",
+      "referral_reason": "Major depressive disorder",
+      "top_reason": "Dementia (F03.90) is documented in the chart on the face sheet (p10) and MAR (p11). The admission criteria list dementia as ineligible (NEU-X5) and the referral form excludes cognitive impairment (FORM-X1). Both referral forms leave 'cognitive impairment' unchecked, but that is the referrer's attestation and the chart outweighs it.",
+      "error": null,
+      "pages": {
+        "pdf_read": "R01_pdf_read/R01_pdf_read.html",
+        "custom_checklist": "R01_pdf_read/R01_custom_checklist.html",
+        "intake_decision": "R01_pdf_read/R01_intake_decision.html"
+      }
+    },
+    {
+      "packet_id": "R02",
+      "recommendation": "maybe",
+      "confidence": "low",
+      "escalate": false,
+      "counts": {
+        "met": 12,
+        "not_met": 0,
+        "pending": 21,
+        "not_applicable": 7
+      },
+      "age": "73",
+      "referral_reason": "Right leg cellulitis / right leg pain; recently homeless",
+      "top_reason": "Current IHH referral form (RC0725) with the front-page screening checklist (CK-01).",
+      "error": null,
+      "pages": {
+        "pdf_read": "R02_pdf_read/R02_pdf_read.html",
+        "custom_checklist": "R02_pdf_read/R02_custom_checklist.html",
+        "intake_decision": "R02_pdf_read/R02_intake_decision.html"
+      }
+    }
+  ]
+}

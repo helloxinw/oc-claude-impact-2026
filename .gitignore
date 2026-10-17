@@ -17,3 +17,8 @@ frontend/dist/
 # OS
 .DS_Store
 Thumbs.db
+
+# yarong_dev
+__pycache__/
+*.pyc
+node_modules/

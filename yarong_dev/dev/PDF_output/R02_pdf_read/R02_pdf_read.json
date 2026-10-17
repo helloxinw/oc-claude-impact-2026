@@ -1,0 +1,2248 @@
+{
+  "packet_id": "R02",
+  "page_count": 22,
+  "patient_type": "adult",
+  "criteria_set": "adult",
+  "packet_index": {
+    "patient_category": {
+      "age_group": "adult",
+      "age": "73",
+      "criteria_set": "adult",
+      "care_setting": {
+        "value": "emergency department (no inpatient admission)",
+        "status": "documented",
+        "pages": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "note": "Fax: 'New Referral ED patient'. Face sheet: 'Patient Class: Emergency', 'Inp Admit Date/Time: N/A N/A'. Referral form: '[X] ED Visit [ ] Hospital Admit'. The CalAIM form says 'Currently in Hospital? X Yes' (in the ED at referral)."
+      },
+      "referral_reason": {
+        "value": "Right leg cellulitis / right leg pain; recently homeless",
+        "pages": [
+          3,
+          6,
+          14
+        ]
+      },
+      "pages": [
+        2,
+        10,
+        12,
+        14
+      ]
+    },
+    "relevant_documents": [
+      {
+        "document_index": 1,
+        "name": "Face sheet / demographic page",
+        "pages": [
+          2
+        ],
+        "criteria_sections": [
+          "Patient category",
+          "General",
+          "End of life"
+        ],
+        "rule_ids": [
+          "DOC-2",
+          "GEN-2",
+          "EOL-1"
+        ]
+      },
+      {
+        "document_index": 2,
+        "name": "IHH (Illumination Foundation) LA/OC referral form",
+        "pages": [
+          3
+        ],
+        "criteria_sections": [
+          "Referral form screen",
+          "General",
+          "ADLs",
+          "Mobility",
+          "Mental health",
+          "Cognition",
+          "Other factors",
+          "Form-only exclusions",
+          "Cardiac"
+        ],
+        "rule_ids": [
+          "DOC-1",
+          "FORM-M1",
+          "FORM-M4",
+          "FORM-M5",
+          "FORM-M6",
+          "FORM-X1",
+          "FORM-X4",
+          "FORM-X5",
+          "FORM-X6",
+          "GEN-1",
+          "ADL-1",
+          "ADL-3",
+          "MOB-1",
+          "MOB-3",
+          "MH-1",
+          "MH-3",
+          "COG-1",
+          "OTH-1",
+          "OTH-2",
+          "CARD-4",
+          "RESP-3"
+        ]
+      },
+      {
+        "document_index": 3,
+        "name": "CalOptima CalAIM Recuperative Care referral/authorization request",
+        "pages": [
+          4,
+          5,
+          6,
+          7,
+          8
+        ],
+        "criteria_sections": [
+          "General",
+          "ADLs",
+          "Mobility",
+          "Mental health",
+          "Cognition",
+          "Other factors",
+          "Infection control",
+          "Form-only exclusions"
+        ],
+        "rule_ids": [
+          "DOC-3",
+          "DOC-10",
+          "GEN-1",
+          "ADL-1",
+          "MOB-1",
+          "MH-1",
+          "COG-1",
+          "COG-2",
+          "OTH-2",
+          "OTH-3",
+          "OTH-4",
+          "FORM-X4",
+          "RESP-3",
+          "ID-3"
+        ]
+      },
+      {
+        "document_index": 4,
+        "name": "ED RN note",
+        "pages": [
+          9
+        ],
+        "criteria_sections": [
+          "ADLs",
+          "Mobility"
+        ],
+        "rule_ids": [
+          "DOC-8",
+          "ADL-1",
+          "MOB-1",
+          "MOB-3"
+        ]
+      },
+      {
+        "document_index": 5,
+        "name": "ED encounter summary: labs, imaging, ECG, MAR, home meds, ED vitals",
+        "pages": [
+          10,
+          11,
+          12,
+          13
+        ],
+        "criteria_sections": [
+          "Infection control",
+          "Infection",
+          "Respiratory",
+          "Cardiac",
+          "Diabetes",
+          "Other factors"
+        ],
+        "rule_ids": [
+          "DOC-6",
+          "DOC-7",
+          "INF-2",
+          "ID-1",
+          "ID-Q2",
+          "RESP-1",
+          "RESP-2",
+          "CARD-1",
+          "CARD-2",
+          "CARD-3",
+          "CARD-4",
+          "CARD-6",
+          "OTH-3"
+        ]
+      },
+      {
+        "document_index": 6,
+        "name": "ED provider note (H&P equivalent) incl. labs and ED course",
+        "pages": [
+          14,
+          15,
+          16,
+          17,
+          18,
+          19,
+          20,
+          21,
+          22
+        ],
+        "criteria_sections": [
+          "General",
+          "Mobility",
+          "Mental health",
+          "Cognition",
+          "Infection control",
+          "Infection",
+          "Respiratory",
+          "Cardiac",
+          "Integumentary",
+          "Circulatory"
+        ],
+        "rule_ids": [
+          "DOC-4",
+          "DOC-5",
+          "DOC-6",
+          "DOC-7",
+          "DOC-9",
+          "GEN-1",
+          "MOB-3",
+          "MH-1",
+          "MH-4",
+          "COG-2",
+          "INF-2",
+          "ID-1",
+          "ID-2",
+          "ID-Q1",
+          "ID-Q2",
+          "RESP-Q1",
+          "CARD-1",
+          "CARD-3",
+          "CARD-4",
+          "CARD-5",
+          "INT-E1",
+          "CIR-X1"
+        ]
+      }
+    ],
+    "other_documents": [
+      {
+        "document_index": 0,
+        "name": "Fax cover",
+        "pages": [
+          1
+        ],
+        "reason": "No clinical content."
+      }
+    ],
+    "missing_documents": [
+      {
+        "id": "DOC-9",
+        "name": "Blood or Wound Culture (if needed)",
+        "note": "Blood cultures x2 and urine culture ordered ('Sent'); no results."
+      },
+      {
+        "id": "MOB-2",
+        "name": "PT/OT notes",
+        "note": "Marked attached on the referral form but absent. DOC-8 is satisfied only by a one-line RN note."
+      }
+    ]
+  },
+  "pages": [
+    {
+      "page": 1,
+      "document_index": 0,
+      "orientation": "upright",
+      "quality": "ok",
+      "ocr_confidence": 0.8,
+      "notes": "Handwritten fill-in; header/footer redacted."
+    },
+    {
+      "page": 2,
+      "document_index": 1,
+      "orientation": "upright",
+      "quality": "ok",
+      "ocr_confidence": 0.92,
+      "notes": "Most identifiers redacted."
+    },
+    {
+      "page": 3,
+      "document_index": 2,
+      "orientation": "upright",
+      "quality": "ok",
+      "ocr_confidence": 0.8,
+      "notes": "Mixed print + handwriting; checkbox marks legible. A vertical fax-scan line runs down the page center through the text; did not obscure words."
+    },
+    {
+      "page": 4,
+      "document_index": 3,
+      "orientation": "upright",
+      "quality": "ok",
+      "ocr_confidence": 0.92,
+      "notes": ""
+    },
+    {
+      "page": 5,
+      "document_index": 3,
+      "orientation": "upright",
+      "quality": "ok",
+      "ocr_confidence": 0.92,
+      "notes": "Blank pathway options page (no boxes checked)."
+    },
+    {
+      "page": 6,
+      "document_index": 3,
+      "orientation": "upright",
+      "quality": "ok",
+      "ocr_confidence": 0.92,
+      "notes": ""
+    },
+    {
+      "page": 7,
+      "document_index": 3,
+      "orientation": "upright",
+      "quality": "ok",
+      "ocr_confidence": 0.92,
+      "notes": ""
+    },
+    {
+      "page": 8,
+      "document_index": 3,
+      "orientation": "upright",
+      "quality": "ok",
+      "ocr_confidence": 0.92,
+      "notes": "Provider contact block redacted; acceptance section blank."
+    },
+    {
+      "page": 9,
+      "document_index": 4,
+      "orientation": "upright",
+      "quality": "near_blank",
+      "ocr_confidence": 0.92,
+      "notes": "Near-blank: single sentence of text."
+    },
+    {
+      "page": 10,
+      "document_index": 5,
+      "orientation": "upright",
+      "quality": "ok",
+      "ocr_confidence": 0.92,
+      "notes": ""
+    },
+    {
+      "page": 11,
+      "document_index": 5,
+      "orientation": "upright",
+      "quality": "ok",
+      "ocr_confidence": 0.92,
+      "notes": ""
+    },
+    {
+      "page": 12,
+      "document_index": 5,
+      "orientation": "upright",
+      "quality": "ok",
+      "ocr_confidence": 0.92,
+      "notes": ""
+    },
+    {
+      "page": 13,
+      "document_index": 5,
+      "orientation": "upright",
+      "quality": "ok",
+      "ocr_confidence": 0.92,
+      "notes": ""
+    },
+    {
+      "page": 14,
+      "document_index": 6,
+      "orientation": "upright",
+      "quality": "ok",
+      "ocr_confidence": 0.92,
+      "notes": ""
+    },
+    {
+      "page": 15,
+      "document_index": 6,
+      "orientation": "upright",
+      "quality": "ok",
+      "ocr_confidence": 0.92,
+      "notes": ""
+    },
+    {
+      "page": 16,
+      "document_index": 6,
+      "orientation": "upright",
+      "quality": "ok",
+      "ocr_confidence": 0.92,
+      "notes": ""
+    },
+    {
+      "page": 17,
+      "document_index": 6,
+      "orientation": "upright",
+      "quality": "ok",
+      "ocr_confidence": 0.92,
+      "notes": "Large redaction box covers most of the page between exam and labs."
+    },
+    {
+      "page": 18,
+      "document_index": 6,
+      "orientation": "upright",
+      "quality": "duplicate",
+      "ocr_confidence": 0.92,
+      "notes": "Duplicate of labs on pages 10-11 (re-printed inside provider note)."
+    },
+    {
+      "page": 19,
+      "document_index": 6,
+      "orientation": "upright",
+      "quality": "ok",
+      "ocr_confidence": 0.92,
+      "notes": "Partly duplicates page 11 (blood cultures, UA)."
+    },
+    {
+      "page": 20,
+      "document_index": 6,
+      "orientation": "upright",
+      "quality": "ok",
+      "ocr_confidence": 0.92,
+      "notes": "PMH list duplicates page 15; EKG section is an unfilled template."
+    },
+    {
+      "page": 21,
+      "document_index": 6,
+      "orientation": "upright",
+      "quality": "ok",
+      "ocr_confidence": 0.92,
+      "notes": "MDM, impression and disposition are unfilled template fields (***)."
+    },
+    {
+      "page": 22,
+      "document_index": 6,
+      "orientation": "upright",
+      "quality": "ok",
+      "ocr_confidence": 0.92,
+      "notes": ""
+    }
+  ],
+  "documents": [
+    {
+      "index": 0,
+      "document_type": "fax cover",
+      "checklist_ids": [],
+      "patient_type": "adult",
+      "pages": [
+        1
+      ],
+      "text": "[redacted header]\nFAX\nDate: [redacted]\nTo: Recup Care\nSubject: New Referral ED patient\nFax: [redacted]\nPages: (blank)\nComments: Please call me @ [redacted] w/ any questions/updates thanks! [redacted signature]\nThe information contained in this fax transmission is the private and confidential property of the patient and the sender. ... [redacted footer]",
+      "summary": "Handwritten fax cover to Recuperative Care: 'New Referral ED patient'. No clinical content.",
+      "confidence": 0.95
+    },
+    {
+      "index": 1,
+      "document_type": "face sheet / demographic page",
+      "checklist_ids": [
+        "DOC-2"
+      ],
+      "patient_type": "adult",
+      "pages": [
+        2
+      ],
+      "text": "Admit Date: [redacted]  Inp Admit Date/Time: N/A N/A  Hospital Account/MRN/Patient/Contact Serial #/Private Encounter: [redacted]\nENCOUNTER\nPatient Class: Emergency  Hospital Service: Emergency Medicine  Admitting Provider: (blank)  Attending Provider: [redacted]\nAdmit Source: Non-healthcare facility *  Advanced Directives: No-Information Given  Unit/Room/Bed: [redacted]\nReferring Physician: (blank)  Adm Diagnosis: (blank)  Clinical Impression: (blank)  Admit Type: Emergency\nPATIENT\nName/Address/Primary Care: [redacted]  DOB: [redacted]  Legal Sex: Female  Gender Identity: (blank)  Phones: [redacted]\nEMERGENCY CONTACT\n1. *No Contact Specified*\n2. *No Contact Specified*\nGUARANTOR: [redacted]  GUARANTOR EMPLOYER  Status: RETIRED\nCOVERAGE\nPRIMARY INSURANCE: MEDICARE  Plan: MEDICARE PART A AND B  Insurance Type: Indemnity [I]  Subscriber: [redacted]\nSECONDARY INSURANCE: CAL OPTIMA MEDICAID HMO  Plan: CAL OPTIMA DIRECT MDCD HMO  Insurance Type: Indemnity [I]  Pat. Rel. to Subscriber: Self  Subscriber ID: [redacted]\n[redacted footer]",
+      "summary": "Hospital face sheet: Emergency patient class, no inpatient admission (N/A), female, retired, no emergency contact, Medicare A/B + CalOptima Medi-Cal (Medi-Medi).",
+      "confidence": 0.93
+    },
+    {
+      "index": 2,
+      "document_type": "IHH referral form",
+      "checklist_ids": [
+        "DOC-1"
+      ],
+      "patient_type": "adult",
+      "pages": [
+        3
+      ],
+      "text": "LA/OC REFERRAL FORM\nTo refer a patient, please complete the entire form including supporting documents and FAX to [redacted] or email to [redacted]. For all referral questions, please contact IF Referral Coordinator at [redacted]\nReferring Hospital / SW/CM/RN / E-mail / Dept/Floor / Phone: [redacted]  Authorized by: (blank)\nPatient Name / MRN / Date of Birth / SSN: [redacted]\nGender: [ ] Male [X] Female [ ] Transgender  Ethnicity: Caucasian\n[X] ED Visit [ ] Hospital Admit  Date: [redacted]  Expected Discharge Date: [redacted]\nInsurance Type: Medi-Medi  English Speaking? [X] Yes\nPLEASE VERIFY: [X] Currently homeless  Check if: [ ] Homeless for more than 1 year continuously or 4 episodes in last 3 years\nCHIEF COMPLAINT/ADMITTING DIAGNOSIS: Right leg pain, cellulitis\nSUBSTANCE ABUSE? [X] None [ ] Alcohol [ ] Cocaine [ ] Heroin [ ] Meth [ ] Other  Last Date Used: (blank)  Current withdrawals: [X] No [ ] Yes\nANY WOUNDS? [ ] Yes [X] No  #/Loc/Size/Stage: (blank)  Independent with wound care? [ ] Yes [ ] No  If no, will Home Health be ordered? [ ] Yes [ ] no\nPPD/TB test or Chest XRAY performed? [X] yes [ ] no  Date: [redacted]  Results: Neg\nANY LIMITATIONS, BEHAVIORAL CHALLENGES OR MENTAL HEALTH ISSUES? [ ] None [ ] Auditory/Visual Hallucinations\n[X] Mental Health DX  If yes, what type?: Bipolar, Schizophrenia  [ ] Non-compliant [ ] forgetful [ ] Cognitive Impairment [ ] Reg. Sex offender [X] other, please explain: NO behavioral issues identified.\nRequires O2? [ ] Yes [X] No  Self Administer All Meds? [X] Yes [ ] No\nContinent of Bowel & Bladder? [X] Yes  Colostomy/Ileostomy [X] No  Foley Catheter [X] No\nIndependent w/all ADL's? [X] Yes [ ] No  *Please explain: Has seated walker\nDiabetic? [X] No  Insulin [ ]  Oral Meds [ ]  Communicable Diseases?: (blank)\nAnticoagulants?: [X] No  If yes, Requires INR/PT/PTT checks through Home Health or Clinic?: (blank)\nAmbulatory? [X] Yes [ ] No  Assistive device? [ ] No [X] Yes *Please Explain: Seated walker\nDoes Patient have a car? [X] No  Spouse/Partner? [X] No  Service Animal? [X] No\nLength of Stay authorized in Recuperative Care: 30 days\nAttached Docs: [X] Face Sheet [X] H&P [X] Med List [X] Psych notes [X] Surgical notes [X] PT/OT Eval. [ ] SW notes (box appears struck through)\nIF STAFF ONLY: (all blank)\n[redacted footer]",
+      "summary": "Illumination Foundation 'LA/OC Referral Form' (not the RC0725 front-page screen): ED visit, currently homeless, right leg pain/cellulitis, bipolar + schizophrenia with 'NO behavioral issues identified', independent ADLs, ambulatory with seated walker, self-administers meds, no O2, not diabetic, anticoagulants 'No', TB/CXR negative.",
+      "confidence": 0.85
+    },
+    {
+      "index": 3,
+      "document_type": "health plan authorization (CalAIM / CalOptima / LOA)",
+      "checklist_ids": [
+        "DOC-3"
+      ],
+      "patient_type": "adult",
+      "pages": [
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "text": "[p4] CalOptima Health — CalAIM Recuperative Care/ Short-Term Post Hospitalization Referral/Authorization Request. Member Name/CIN: [redacted]\nStep 1 Referral Information: Referral Date/Referred by/Agency/Phone/Fax/Email: [redacted]  Referring Provider NPI: (blank)\nMember Information: Name/DOB/PCP/Phone/SSN: [redacted]  Email/Fax/SW-CM-RN: (blank)  Member's Preferred Language: English  Is Member Currently in Hospital? X Yes  No\nStep 3: [X] Recuperative Care Only (Up to 90 days) — Select one that applies: [X] Homeless or at risk of homelessness [ ] Individuals who are at risk of hospitalization or are post-hospitalization [ ] Individuals who live alone with no formal supports. Page 1 of 5\n[p5] Short-Term Post Hospitalization Housing Only / Nursing Facility with plans to transition / Recuperative Care with plans to transition — all boxes unchecked. Page 2 of 5\n[p6] Admitting Diagnosis — Qualifying diagnosis: right leg cellulitis. ED Visit / Hospital Admit Date: [redacted]  Expected Discharge Date: [redacted]\nPost-Acute Discharge Instructions — Clients last visit with their PCP: (blank)  Their Next visit: (blank)\nSpecialists: Specialty: None\nAuthorized Home Health Provider — Service: [ ] PT [ ] OT [ ] Speech [ ] Wound Care  Provider Name: [redacted]  Phone/Scheduled Appt Date: (blank)\nHealth Information — Gender: [X] Female. COVID vaccine Dose 1/2, Booster 1/2: all unmarked. TB Test or Chest X-Ray Performed? [X] YES  Date: [redacted]  Results: [ ] Positive [X] Negative\nNeuro: Alert and Oriented to: [X] Person [X] Place [X] Time [X] Situation\nRespiratory: [ ] Requires O2 (Explain): None. Page 3 of 5\n[p7] GI/GU: incontinence/colostomy/Foley all unchecked; tube feeding [X] NO\nAmbulation/Mobility: Can the client independently perform ADLs? [X] YES  Does the Client use DME? [X] YES (Explain) Seated walker  Fractures [X] NO  Recent Surgery [X] NO\nIntegumentary: Wound(s) [X] NO  Independent with wound care: unmarked\nInfections: Communicable Diseases/Isolation describe: (blank)  IV Antibiotics: [X] NO  Frequency: (blank)\nPsycho-Social: [ ] Registered Sex Offender  Client has a: [ ] Car [ ] Spouse/Partner [ ] Service Animal [ ] Pets\nSubstance Use: [X] None\nMental Health DX: No behavorial needs identified  [ ] Anxiety [X] Bipolar [ ] Cognitive Impairment [ ] Depression [X] Schizophrenia [ ] Trauma-related [ ] Other [ ] Current treatment: (blank)\nRequires assistance with ADL's (Explain): NO\nChronic Disease Management: [ ] Diabetic [ ] Insulin [X] Oral Meds [ ] Anticoagulants [ ] Requires INR/PT/PTT checks [ ] Requires Assistance with Medication  List medication(s): (blank)\nDoes member have enough medication to last through the end of the month? [X] YES  Understand how to obtain refills? [X] YES  Preferred pharmacy? [X] NO  Understand how to take their medication and why? [X] YES. Page 4 of 5\n[p8] Step 4: Community Supports Provider Contact Information [redacted]. Step 5 (provider section): Was the member accepted? [ ] YES [ ] NO — blank. Page 5 of 5",
+      "summary": "CalOptima CalAIM Recuperative Care authorization request (5 pages): Recuperative Care Only pathway, homeless; dx right leg cellulitis; AOx4 boxes checked; no O2; independent ADLs; DME seated walker; IV antibiotics 'NO'; bipolar + schizophrenia; oral meds; enough meds to end of month; no home health services checked; no PCP follow-up date.",
+      "confidence": 0.9
+    },
+    {
+      "index": 4,
+      "document_type": "nursing note / flowsheet",
+      "checklist_ids": [
+        "DOC-8"
+      ],
+      "patient_type": "adult",
+      "pages": [
+        9
+      ],
+      "text": "[redacted]  Registered Nurse  Specialty: Registered Nurse  ED Notes  Signed  [redacted]\nPatient is able to independently manage her own ADLS and ambulate 100ft with the assistance of her walker.",
+      "summary": "One-line ED RN note: independent with ADLs and ambulates 100 ft with her walker.",
+      "confidence": 0.97
+    },
+    {
+      "index": 5,
+      "document_type": "lab report",
+      "checklist_ids": [
+        "DOC-6",
+        "DOC-7"
+      ],
+      "patient_type": "adult",
+      "pages": [
+        10,
+        11,
+        12,
+        13
+      ],
+      "text": "[p10] Department [redacted]  [redacted] (73 y.o. F) [redacted]\nED Diagnosis: None\nResults (Procedure / Component / Value / Ref Range / Date/Time [redacted]):\nUrinalysis, Reflex Microscopic and/or Culture [redacted] — Order Status: Sent — Specimen: Urine, Clean Catch\nInfluenza A,B,RSV,COVID-19, NAAT [redacted] (Normal) — Completed — Specimen: Body Fluid from Nasopharynx: Influenza A Negative; Influenza B Negative; RSV Negative; SARS-CoV-2, NAAT (COVID-19) Negative (ref Negative)\nProcalcitonin [redacted] (Abnormal) — Completed — Blood: Procalcitonin [redacted] ^ ng/mL. Narrative: Procalcitonin Clinical Guidelines [partly redacted] ...\nLactic Acid Reflex to RPT 2HR If Indicated [redacted] (Normal): Lactate 0.8 mmol/L\nComprehensive Metabolic Panel [redacted] (Abnormal): Sodium 140 (136-145); Potassium [redacted]; Chloride 105 (97-107); Carbon Dioxide 28 (20-31); Anion Gap 7; Glucose 101 (74-106 mg/dL)\n[p11] BUN 16 (9-23); Creatinine 0.54 (low); Calcium 9.8; Albumin 4.4; Bilirubin Total 0.4; Total Protein [redacted]; AST 14 (<34); ALT 10 (10-49); Alkaline Phosphatase 71 (46-116); Globulin/A:G/BUN:Cr [redacted]; eGFR 97 (>=60)\nCBC with Diff [redacted] (Abnormal): WBC 7.46 K/uL; RBC/Hgb/Hct/MCV/MCH/MCHC/RDW-CV [redacted]; RDW-SD 44.4; Platelet Count 362 (160-370); MPV 8.8 (low); % Eosinophils 0.9; other differential values [redacted]\nCulture, Blood [redacted] — Order Status: Sent — Specimen: Peripheral Blood (x2)\nImaging Results\n[p12] XR Foot Right 3 + Vw (In process)\nVAS Lower Extremity Venous Bilateral (In process)\nXR Chest AP Portable (Final result) [redacted]. Impression: No acute thoracic abnormality. Electronically signed by [redacted]. Narrative: EXAMINATION: XR CHEST AP PORTABLE [redacted]. CLINICAL HISTORY: 73 years of age, Female, [redacted]. COMPARISON: Chest x-ray on [redacted]. FINDINGS: Lungs are clear. No pleural effusion or pneumothorax. Aortic knob calcifications. Normal cardiac silhouette size. Upper abdomen is unremarkable. No acute osseous findings.\nECG Results — ECG 12 lead (Preliminary result) Collection/Result Time [redacted]  INTERPRETATION TEXT: Not Confirmed\nMedication Administration - last 24 hours from [redacted]: cefepime (MAXIPIME) 2 g in sterile water 20 mL syringe 2 g Intravenous Given; lactated ringers (LR) bolus 1,000 mL Intravenous New Bag; vancomycin in saline IVPB 2 g Intravenous New Bag. Action by [redacted]\nHome Medications: acetaminophen (TYLENOL) 500 mg tablet (Historical Provider, MD); acetaminophen-codeine (TYLENOL #3) [redacted] mg per tablet (Home Care Services); apixaban (ELIQUIS) 5 mg tablet — Take 1 tablet by mouth 2 times daily; cetirizine (ZYRTEC) 10 mg tablet\n[p13] cyclobenzaprine (FLEXERIL) 5 MG tablet; hydrocortisone (PREPARATION H) 1% rectal cream — Place rectally 4 times daily as needed for Hemorrhoidal Pain; Levalbuterol Tartrate (XOPENEX HFA INHAL); losartan (COZAAR) 50 mg tablet — Take 1 tablet by mouth Daily; polyethylene glycol (MIRALAX) 17 g packet — Take 1 diluted packet by mouth Daily as needed for Constipation (IF LACTULOSE INEFFECTIVE).\nAllergies (Review Complete on [redacted]): Menthol — High — Anything with menthol triggers asthma; Sulfa Antibiotics — High; Erythromycin — Facial swelling; Adhesive & Tape — Low; Latex — Low\nED Vitals (Past 4H) from [redacted]: [redacted time] Temp [redacted] °F, Pulse 72, Resp 16, BP 178/79, SpO2 98 %, O2 Device room air; second row: -- -- -- -- -- room air\nED A/B/C/D Assess: Respiratory WDL: WDL; Cardiac WDL: WDL; others --\nSelected ED Notes: No notes of this type exist for this encounter.",
+      "summary": "ED encounter summary: flu/RSV/COVID NAAT negative; procalcitonin flagged abnormal; lactate 0.8; CMP/CBC largely normal (WBC 7.46, glucose 101); blood cultures x2 and UA sent (no results); CXR no acute abnormality; right foot XR and bilateral LE venous duplex in process; ECG preliminary 'Not Confirmed'; IV cefepime/vancomycin/LR in last 24 h; home med list incl. apixaban and losartan; one set of ED vitals (BP 178/79, SpO2 98% RA).",
+      "confidence": 0.88
+    },
+    {
+      "index": 6,
+      "document_type": "H&P",
+      "checklist_ids": [
+        "DOC-4",
+        "DOC-5",
+        "DOC-6",
+        "DOC-7",
+        "DOC-9"
+      ],
+      "patient_type": "adult",
+      "pages": [
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22
+      ],
+      "text": "[p14] [redacted] Emergency Medicine — ED Provider Notes — Shared [redacted]\nMode of Arrival: BLS Ambulance  Accompanied by: EMS\nNursing Triage Note — ED Triage [redacted]: Pt biba from grocery store parking lot. Pt has R leg pain, diagnosed with cellulitis about a month ago. Pt states she has been homeless since Friday. Pt is able to bear some weight.\nCHIEF COMPLAINT: Patient presents with • Leg Pain\nHISTORY OF PRESENT ILLNESS: [redacted] 73 y.o. female, with past medical history of homeslessness for 5 days, anemia, asthma, atrial fibrillation, bipolar 1 disorder, schizophrenia, and sleep apnea, who presents to the emergency department with a chief complaint of right leg pain for about 1 month with associated redness and swelling from her shin to her toes. Patient reports she was diagnosed with cellulitis 8 days ago and has been on a course of Doxycycline for 8 days. She states she had some improvement with the treatment but has felt herself become \"sicker\" in the last 2 days. She endorses an infection of her leg 3 months ago and was placed on IV antibiotics. Patient reports she was on Eliquis for 6 months for clotting and was taken off it recently when her blood clot cleared. Additionally, she states she has difficulty walking due to back pain. Denies redness of her left leg.\nREVIEW OF SYSTEMS: As per HPI for details.\n[p15] PAST MEDICAL HISTORY: Acid reflux disease; Anemia; Arthritis; Asthma (HCC); Atrial fibrillation (HCC); Back injury from MVA; Back pain; Barrett esophagus; Bipolar 1 disorder (HCC); Cataract WITH BIL CATARACT SURGERY; Claustrophobia; Paroxysmal atrial fibrillation (HCC); Schizophrenia (HCC); Sleep apnea USES CPAP MACHINE.\nThere is no immunization history on file for this patient.\nSURGICAL HISTORY: ABLATION OF DYSRHYTHMIC FOCUS (Right) Procedure: CV EP ABLATION A-FIB [redacted]; CATARACT REMOVAL (Bilateral); CERVICAL POLYP REMOVAL; COLONOSCOPY; COLONOSCOPY (N/A) [redacted]; DEBRIDEMENT (Right) Procedure: IRRIGATION AND DEBRIDEMENT OF RIGHT THIGH HEMATOMA [redacted]; TRANSESOPHAGEAL ECHOCARDIOGRAM Procedure: ECHO - TRANSESEOPHAGEAL / CARDIOVERSION [redacted]; UPPER GASTROINTESTINAL ENDOSCOPY Procedure: EGD [redacted]. Dates [redacted].\nFAMILY HISTORY: History reviewed. No pertinent family history.\nSOCIAL HISTORY: Patient lives a[redacted]. Tobacco Use:\n[p16] Smoking status: Former; Current packs/day: [redacted]; Types: Cigarettes; Start date: 1972; Quit date: 2022; Smokeless tobacco: Never. Alcohol use: Not Currently. Drug use: Not Currently.\nMEDICATIONS — PTA Home Medications: acetaminophen (TYLENOL) 500 mg tablet — Take 1 tablet by mouth Twice daily as needed for Pain; acetaminophen-codeine (TYLENOL #3) [redacted] mg per tablet — Take 1 tablet by mouth every 4 hours as needed for Pain; apixaban (ELIQUIS) 5 mg tablet — Take 1 tablet by mouth 2 times daily; cetirizine (ZYRTEC) 10 mg tablet — Take 1 tablet by mouth nightly; cyclobenzaprine (FLEXERIL) 5 MG tablet — Take 3 tablets by mouth nightly; hydrocortisone (PREPARATION H) 1% rectal cream — Place rectally 4 times daily as needed for Hemorrhoidal Pain; Levalbuterol Tartrate (XOPENEX HFA INHAL) — Inhale 2 puffs into the lungs EVERY 4 TO 6 HOURS AS NEEDED (Exacerbation of asthma); losartan (COZAAR) 50 mg tablet — Take 1 tablet by mouth Daily; polyethylene glycol (MIRALAX) 17 g packet — Take 1 diluted packet by mouth Daily as needed for Constipation (IF LACTULOSE INEFFECTIVE).\nALLERGIES: Menthol, Sulfa antibiotics, Erythromycin, Adhesive & tape, and Latex\nPHYSICAL EXAM — VITAL SIGNS (first vital signs): Temp: 36.6 °C ([redacted] °F) Heart Rate: 72 Resp: 16 SpO2: 98 % BP: 178/79. Encounter Vitals: BP 178/79; Heart Rate 72; Resp 16; Temp [redacted] °C ([redacted] °F); Temp Source: Oral; SpO2 98 %.\nConstitutional: Well developed, well nourished, in no acute distress. HEENT: Normocephalic, atraumatic, bilateral external ears normal, nose normal. Conjunctiva normal, no discharge. Neck: Normal range of motion, supple. Respiratory: Normal breath sounds, no respiratory distress, no wheezing, no accessory muscle use. Cardiovascular: Well perfused, normal rhythm, no murmurs. DP/TP 2+ BLE. ABD: Soft, no tenderness, no guarding, rigidity or rebound. Musculoskeletal: No edema, no tenderness, no cyanosis. Good range of motion in all major joints. No major deformities noted.\n[p17] Skin: Warm, dry. Erythema to the right anterior shin that is blanchable. Slightly hot to touch. No crepitus. Neurologic: Alert & oriented x4. Moves all 4 extremities well; normal speech. Normal motor function, normal sensory function, no focal deficits noted. Psychiatric: Affect normal, judgment normal, mood normal [text partly under redaction box]. [large redacted block]\nDATA — LABS — Results: Influenza A,B,RSV,COVID-19 [redacted] (Normal) — Nasopharynx: Influenza A Negative; Influenza B Negative; RSV Negative; SARS-CoV-2, NAAT (COVID-19) Negative. [Procalcitonin] [redacted] (Abnormal) — Blood: Procalcitonin 0.10 ^ ng/mL. Narrative: Procalcitonin Clinical Guidelines [partly redacted].\n[p18] Lactic Acid Reflex to RPT 2HR If Indicated (Normal): Lactate [redacted]. Comprehensive Metabolic [redacted] (Abnormal): Sodium 140; Potassium [redacted]; Chloride 105; Carbon Dioxide 28; Anion Gap 7 (5-13); Glucose 101 (74-106); BUN 16; Creatinine 0.54 (low); Calcium [redacted]; Albumin 4.4; Bilirubin Total 0.4; Total Protein 8.0; AST 14; ALT 10; Alkaline Phosphatase 71; Globulin [redacted]; Albumin/Globulin Ratio 1.2; BUN/Creatinine Ratio [redacted]; eGFR 97. CBC with Differential [redacted] (Abnormal): WBC 7.46; RBC 4.88; Hemoglobin [redacted]; Hematocrit 41.2; MCV/MCH/MCHC/RDW [redacted]; Platelet Count 362; MPV 8.8 (low); % Basophils 0.1; % Immature Granulocytes 0.4; others [redacted].\n[p19] Absolute Eosinophils 0.07; Absolute Immature Granulocytes 0.03; % nRBC 0.0; Absolute nRBC 0.00; other absolute counts [redacted]. Culture, Blood [redacted] — Order Status: Sent — Peripheral Blood (x2). Urinalysis, Reflex Microscopic and/or Culture [redacted] — Sent — Urine, Clean Catch.\nED COURSE — Patient Vitals for the past 24 hrs: [redacted time] BP 178/79; Temp 36.6 °C (97.9 °F); Temp src Oral; Pulse 72; Resp 16; SpO2 98 %. Encounter Vitals: BP 178/79; Heart Rate 72; Resp 16; Temp [redacted]; Temp Source Oral; SpO2 98 %. Pertinent Labs & Imaging studies reviewed. Quality measures reviewed. PROCEDURES: (blank) PROGRESS NOTES: (blank)\nMEDICAL [redacted] MAKING: [redacted] presented to the Emergency Department for evaluation, and she was triaged to room [redacted] reviewed the nursing notes, and she was evaluated by me.\n[p20] Independent historian: History obtained from patient. External notes/Records interpreted: None. Chronic Medical conditions ... Pertaining to this Visit: [PMH list repeated as on p15]. Patient's care impacted by chronic condition of as above. Medications Requiring Close Monitoring ...: ***. Labs interpreted and reviewed by me: See MDM. EKG reviewed and interpreted by me: Date [redacted] **  Time: ***  Rate: ***  Rhythm: [redacted]  Interpretation: (blank)  Compared to prior: {Blank [redacted] from Prior EKG\",\"Changed from prior EKG\",\"No prior EKG available for comparison\"} Reviewed and interpreted by myself. XR Chest AP Portable Final Result IMPRESSION: No acute thoracic abnormality.\n[p21] Electronically signed by [redacted] 10:41 AM PDT. VAS Lower Extremity Venous Bilateral (Results Pending). XR Foot Right 3 + Vw (Results Pending). IMAGING interpreted by me: See MDM.\nMedical Decision-Making/ Differential Diagnosis/...: This is a 73 y.o. female who presents to the ED for ***  [redacted]  {Sepsis Doc [redacted]  I [redacted] am the primary clinician of record. [Discussion] of Management with Additional Providers and Consultants: ***. Social Determinants Of Health Affecting Management ... WITH ACTION TAKEN: ***. CRITICAL CARE: ***.\nIMPRESSION: *** No diagnosis found. DISPOSITION/MEDICATIONS: *** ED Disposition: None. ED Prescriptions: None. Medications:\n[p22] acetaminophen (TYLENOL) tablet 650 mg (has no administration in time range); vancomycin per pharmacy (has no administration in time range); lactated ringers (LR) bolus 1,000 mL (has no administration in time range); cefepime (MAXIPIME) 2 g in sterile water 20 mL syringe (2 g Intravenous Give[n] [redacted]).\nThe patient was provided with a recommendation to follow up with a primary care provider and obtain reassessment of their blood pressure within three months.***\nATTESTATION: I have personally performed the history, exam and services documented above by the scribe. ... By signing my name below [redacted] [med]ical scribe, attest that this documentation has been prepared under the direction and in the presence [redacted]. Record is Dictated with Dragon Dictation System. Revision History: [redacted] — Share; Physician — Share.",
+      "summary": "ED provider note (serves as the H&P; no inpatient H&P): 73F brought by EMS, homeless 5 days, R leg pain/redness shin-to-toes, cellulitis on doxycycline x8 days, feeling 'sicker' 2 days; PMH asthma, paroxysmal AF s/p ablation, bipolar 1, schizophrenia, OSA on CPAP; afebrile, BP 178/79, AOx4; blanchable R shin erythema. MDM, impression ('No diagnosis found') and disposition ('None') are unfilled templates; cultures, foot XR and venous duplex pending; IV cefepime given.",
+      "confidence": 0.88
+    }
+  ],
+  "referral_checklist": [
+    {
+      "id": "DOC-1",
+      "status": "documented",
+      "pages": [
+        3
+      ],
+      "note": "Illumination Foundation 'LA/OC Referral Form' (older version). It does not carry the RC0725 front-page FORM-M/FORM-X screen."
+    },
+    {
+      "id": "DOC-2",
+      "status": "documented",
+      "pages": [
+        2
+      ]
+    },
+    {
+      "id": "DOC-3",
+      "status": "documented",
+      "pages": [
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "note": "CalOptima CalAIM Recuperative Care referral/authorization request. No authorization number or approval shown."
+    },
+    {
+      "id": "DOC-4",
+      "status": "documented",
+      "pages": [
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22
+      ],
+      "note": "ED provider note acts as the H&P. No inpatient H&P exists because the patient was not admitted (face sheet: 'Inp Admit Date/Time: N/A N/A')."
+    },
+    {
+      "id": "DOC-5",
+      "status": "documented",
+      "pages": [
+        14,
+        21,
+        22
+      ],
+      "note": "Only the ED provider note. Its 'PROGRESS NOTES' section is blank (p19), and MDM/impression are unfilled templates."
+    },
+    {
+      "id": "DOC-6",
+      "status": "documented",
+      "pages": [
+        13,
+        16,
+        19
+      ],
+      "note": "'Patient Vitals for the past 24 hrs' has a single set (BP 178/79, T 36.6 C, HR 72, RR 16, SpO2 98%), repeated on three pages. Timestamp redacted."
+    },
+    {
+      "id": "DOC-7",
+      "status": "documented",
+      "pages": [
+        12,
+        13,
+        16
+      ],
+      "note": "Home/PTA medication list. No discharge medication list or ED prescriptions ('ED Prescriptions None', p21)."
+    },
+    {
+      "id": "DOC-8",
+      "status": "documented",
+      "pages": [
+        9
+      ],
+      "note": "Only a one-line ED RN note. No PT/OT notes, although the referral form marks 'PT/OT Eval.' as attached (p3)."
+    },
+    {
+      "id": "DOC-9",
+      "status": "not_in_packet",
+      "pages": [
+        11,
+        19
+      ],
+      "note": "Blood cultures x2 and a UA with reflex culture are 'Order Status: Sent'. No culture results are in the packet."
+    },
+    {
+      "id": "DOC-10",
+      "status": "documented",
+      "pages": [
+        7
+      ],
+      "note": "CalAIM form only: 'Does member have enough medication to last through the end of the month? [X] YES'. No supply list or prescriptions provided."
+    }
+  ],
+  "referral_form_screen": {
+    "present": true,
+    "pages": [
+      3
+    ],
+    "note": "The packet has the Illumination Foundation 'LA/OC REFERRAL FORM', not RC0725 with the FORM-M/FORM-X screen. The 'marked' values below come from the closest field on that form; 'blank' means the form has no equivalent item.",
+    "items": [
+      {
+        "id": "FORM-M1",
+        "marked": "checked",
+        "page": 3,
+        "note": "Nearest field on LA/OC form: 'PLEASE VERIFY: [X] Currently homeless'. RC0725 screen item itself not on this form version."
+      },
+      {
+        "id": "FORM-M2",
+        "marked": "blank",
+        "page": 3,
+        "note": "No 'medically and psychiatrically stable' field on this form version."
+      },
+      {
+        "id": "FORM-M3",
+        "marked": "blank",
+        "page": 3,
+        "note": "No AAOx4 field on the LA/OC form. CalAIM form p6 has Person/Place/Time/Situation all checked."
+      },
+      {
+        "id": "FORM-M4",
+        "marked": "checked",
+        "page": 3,
+        "note": "Nearest field: 'Independent w/all ADL's? [X] Yes — Has seated walker'."
+      },
+      {
+        "id": "FORM-M5",
+        "marked": "checked",
+        "page": 3,
+        "note": "Nearest field: 'Self Administer All Meds? [X] Yes'."
+      },
+      {
+        "id": "FORM-M6",
+        "marked": "checked",
+        "page": 3,
+        "note": "Nearest field: 'Ambulatory? [X] Yes  Assistive device? [X] Yes — Seated walker'. No 100 ft / transfer item on form. Superseded by MOB-3/MOB-4."
+      },
+      {
+        "id": "FORM-X1",
+        "marked": "unchecked",
+        "page": 3,
+        "note": "'[ ] Cognitive Impairment' unchecked."
+      },
+      {
+        "id": "FORM-X2",
+        "marked": "unchecked",
+        "page": 3,
+        "note": "Inferred from 'Independent w/all ADL's? [X] Yes'. No direct exclusion checkbox."
+      },
+      {
+        "id": "FORM-X3",
+        "marked": "blank",
+        "page": 3,
+        "note": "No direct item. Ambulatory Yes with seated walker. Superseded by MOB-3/MOB-4."
+      },
+      {
+        "id": "FORM-X4",
+        "marked": "unchecked",
+        "page": 3,
+        "note": "No active-infection exclusion box. 'PPD/TB test or Chest XRAY performed? [X] yes ... Results: Neg'. 'Communicable Diseases?' blank."
+      },
+      {
+        "id": "FORM-X5",
+        "marked": "unchecked",
+        "page": 3,
+        "note": "'SUBSTANCE ABUSE? [X] None'; 'Current withdrawals: [X] No'."
+      },
+      {
+        "id": "FORM-X6",
+        "marked": "unchecked",
+        "page": 3,
+        "note": "'[ ] Reg. Sex offender' unchecked. Superseded by OTH-2 (case by case)."
+      },
+      {
+        "id": "FORM-X7",
+        "marked": "blank",
+        "page": 3,
+        "note": "No aggression checkbox. 'other, please explain: NO behavioral issues identified.'"
+      }
+    ]
+  },
+  "criteria_evidence": [
+    {
+      "section": "General",
+      "rule_ids": [
+        "GEN-1"
+      ],
+      "status": "documented",
+      "evidence": [
+        {
+          "quote": "PLEASE VERIFY: [X] Currently homeless",
+          "page": 3,
+          "document_index": 2
+        },
+        {
+          "quote": "[X] Homeless or at risk of homelessness",
+          "page": 4,
+          "document_index": 3
+        },
+        {
+          "quote": "Pt states she has been homeless since Friday.",
+          "page": 14,
+          "document_index": 6
+        },
+        {
+          "quote": "past medical history of homeslessness for 5 days",
+          "page": 14,
+          "document_index": 6
+        },
+        {
+          "quote": "Patient lives a[redacted]",
+          "page": 15,
+          "document_index": 6
+        }
+      ],
+      "note": "Homelessness is recent (about 5 days). The 'Homeless for more than 1 year' box is unchecked. The social-history living line is redacted."
+    },
+    {
+      "section": "General",
+      "rule_ids": [
+        "GEN-2",
+        "GEN-3"
+      ],
+      "status": "documented",
+      "evidence": [
+        {
+          "quote": "1. *No Contact Specified* 2. *No Contact Specified*",
+          "page": 2,
+          "document_index": 1
+        },
+        {
+          "quote": "Spouse/Partner? [X] No",
+          "page": 3,
+          "document_index": 2
+        },
+        {
+          "quote": "[ ] Individuals who live alone with no formal supports.",
+          "page": 4,
+          "document_index": 3
+        },
+        {
+          "quote": "[ ] Individuals who are at risk of hospitalization or are post-hospitalization",
+          "page": 4,
+          "document_index": 3
+        }
+      ],
+      "note": "No emergency contact or partner listed. CalAIM form selects only the homeless pathway. Readmission risk is not stated in the chart."
+    },
+    {
+      "section": "ADLs",
+      "rule_ids": [
+        "ADL-1",
+        "ADL-2",
+        "ADL-3"
+      ],
+      "status": "documented",
+      "evidence": [
+        {
+          "quote": "Independent w/all ADL's? [X] Yes ... Has seated walker",
+          "page": 3,
+          "document_index": 2
+        },
+        {
+          "quote": "Continent of Bowel & Bladder? [X] Yes",
+          "page": 3,
+          "document_index": 2
+        },
+        {
+          "quote": "Can the client independently perform ADLs? [X] YES",
+          "page": 7,
+          "document_index": 3
+        },
+        {
+          "quote": "Requires assistance with ADL's (Explain): NO",
+          "page": 7,
+          "document_index": 3
+        },
+        {
+          "quote": "Patient is able to independently manage her own ADLS",
+          "page": 9,
+          "document_index": 4
+        }
+      ],
+      "note": "Bathing/shower transfer and supply gathering (ADL-2) are not described specifically. No OT evaluation."
+    },
+    {
+      "section": "Mobility",
+      "rule_ids": [
+        "MOB-1",
+        "MOB-3"
+      ],
+      "status": "contradictory",
+      "evidence": [
+        {
+          "quote": "ambulate 100ft with the assistance of her walker.",
+          "page": 9,
+          "document_index": 4
+        },
+        {
+          "quote": "Ambulatory? [X] Yes  Assistive device? [X] Yes *Please Explain: Seated walker",
+          "page": 3,
+          "document_index": 2
+        },
+        {
+          "quote": "Does the Client use DME? [X] YES (Explain) Seated walker",
+          "page": 7,
+          "document_index": 3
+        },
+        {
+          "quote": "Pt is able to bear some weight.",
+          "page": 14,
+          "document_index": 6
+        },
+        {
+          "quote": "she states she has difficulty walking due to back pain.",
+          "page": 14,
+          "document_index": 6
+        }
+      ],
+      "note": "The RN note and forms report 100 ft with a walker. ED triage and HPI describe only partial weight bearing and difficulty walking. The assist level ('modified independence') is not stated, and there is no PT measurement."
+    },
+    {
+      "section": "Mobility",
+      "rule_ids": [
+        "MOB-2"
+      ],
+      "status": "not_in_packet",
+      "evidence": [
+        {
+          "quote": "[X] PT/OT Eval.",
+          "page": 3,
+          "document_index": 2
+        }
+      ],
+      "note": "The referral form marks PT/OT eval as attached, but there is no PT/OT note in the packet's 22 pages."
+    },
+    {
+      "section": "Mobility",
+      "rule_ids": [
+        "MOB-4"
+      ],
+      "status": "not_applicable",
+      "evidence": [],
+      "note": "Not described as wheelchair dependent. Uses a seated walker."
+    },
+    {
+      "section": "Mental health",
+      "rule_ids": [
+        "MH-1"
+      ],
+      "status": "documented",
+      "evidence": [
+        {
+          "quote": "[X] Mental Health DX If yes, what type?: Bipolar, Schizophrenia",
+          "page": 3,
+          "document_index": 2
+        },
+        {
+          "quote": "other, please explain: NO behavioral issues identified.",
+          "page": 3,
+          "document_index": 2
+        },
+        {
+          "quote": "Mental Health DX: No behavorial needs identified [X] Bipolar ... [X] Schizophrenia ... [ ] Current treatment:",
+          "page": 7,
+          "document_index": 3
+        },
+        {
+          "quote": "Psychiatric: Affect normal, judgment normal, mood normal",
+          "page": 17,
+          "document_index": 6
+        },
+        {
+          "quote": "Bipolar 1 disorder (HCC) ... Schizophrenia (HCC)",
+          "page": 15,
+          "document_index": 6
+        }
+      ],
+      "note": "Not one psychiatric medication is on the home medication list (p12-13, p16), and 'Current treatment' is unchecked. 'Stable on medications' cannot be confirmed from the packet. The form marks 'Psych notes' as attached, but none are present."
+    },
+    {
+      "section": "Mental health",
+      "rule_ids": [
+        "MH-2"
+      ],
+      "status": "not_in_packet",
+      "evidence": [],
+      "note": "Neither the forms nor the ED note address suicidal ideation."
+    },
+    {
+      "section": "Mental health",
+      "rule_ids": [
+        "MH-3"
+      ],
+      "status": "documented",
+      "evidence": [
+        {
+          "quote": "[ ] Auditory/Visual Hallucinations",
+          "page": 3,
+          "document_index": 2
+        }
+      ],
+      "note": "The hallucination checkbox is unchecked on the referral form. The ED note does not mention hallucinations, and there is no psychiatric evaluation."
+    },
+    {
+      "section": "Mental health",
+      "rule_ids": [
+        "MH-4"
+      ],
+      "status": "not_applicable",
+      "evidence": [
+        {
+          "quote": "SUBSTANCE ABUSE? [X] None ... Current withdrawals: [X] No",
+          "page": 3,
+          "document_index": 2
+        },
+        {
+          "quote": "Alcohol use: Not Currently",
+          "page": 16,
+          "document_index": 6
+        }
+      ],
+      "note": "No alcohol intoxication documented. No CIWA."
+    },
+    {
+      "section": "Mental health",
+      "rule_ids": [
+        "MH-5"
+      ],
+      "status": "not_in_packet",
+      "evidence": [],
+      "note": "Conservatorship/FSP is not addressed. The face sheet shows no legal guardian: 'Legal Guardian?' column empty and 'No Contact Specified'."
+    },
+    {
+      "section": "Cognition",
+      "rule_ids": [
+        "COG-1"
+      ],
+      "status": "documented",
+      "evidence": [
+        {
+          "quote": "Self Administer All Meds? [X] Yes",
+          "page": 3,
+          "document_index": 2
+        },
+        {
+          "quote": "[ ] Requires Assistance with Medication",
+          "page": 7,
+          "document_index": 3
+        },
+        {
+          "quote": "Does the member understand how to take their medication and why they are taking their medication? [X] YES",
+          "page": 7,
+          "document_index": 3
+        }
+      ],
+      "note": "No insulin. The med list includes apixaban, which is disputed (see contradictions)."
+    },
+    {
+      "section": "Cognition",
+      "rule_ids": [
+        "COG-2"
+      ],
+      "status": "documented",
+      "evidence": [
+        {
+          "quote": "Alert and Oriented to: [X] Person [X] Place [X] Time [X] Situation",
+          "page": 6,
+          "document_index": 3
+        },
+        {
+          "quote": "Neurologic: Alert & oriented x4.",
+          "page": 17,
+          "document_index": 6
+        }
+      ],
+      "note": ""
+    },
+    {
+      "section": "Other factors",
+      "rule_ids": [
+        "OTH-1"
+      ],
+      "status": "documented",
+      "evidence": [
+        {
+          "quote": "NO behavioral issues identified.",
+          "page": 3,
+          "document_index": 2
+        },
+        {
+          "quote": "Mental Health DX: No behavorial needs identified",
+          "page": 7,
+          "document_index": 3
+        }
+      ],
+      "note": "No aggression is documented anywhere in the packet."
+    },
+    {
+      "section": "Other factors",
+      "rule_ids": [
+        "OTH-2"
+      ],
+      "status": "documented",
+      "evidence": [
+        {
+          "quote": "[ ] Reg. Sex offender",
+          "page": 3,
+          "document_index": 2
+        },
+        {
+          "quote": "[ ] Registered Sex Offender",
+          "page": 7,
+          "document_index": 3
+        }
+      ],
+      "note": "Unchecked on both forms. Case-by-case rule; FORM-X6 is superseded by OTH-2."
+    },
+    {
+      "section": "Other factors",
+      "rule_ids": [
+        "OTH-3"
+      ],
+      "status": "documented",
+      "evidence": [
+        {
+          "quote": "cefepime (MAXIPIME) 2 g in sterile water 20 mL syringe 2 g Intravenous Given",
+          "page": 12,
+          "document_index": 5
+        },
+        {
+          "quote": "vancomycin in saline IVPB 2 g 2 g Intravenous New Bag",
+          "page": 12,
+          "document_index": 5
+        },
+        {
+          "quote": "IV Antibiotics: [ ] YES [X] NO",
+          "page": 7,
+          "document_index": 3
+        },
+        {
+          "quote": "Service: [ ] PT [ ] OT [ ] Speech [ ] Wound Care Provider Name: [redacted]",
+          "page": 6,
+          "document_index": 3
+        }
+      ],
+      "note": "IV antibiotics and fluids were given in the ED, so a peripheral IV existed. Whether IV access continues after discharge is not stated. No home health services are checked. A home-health provider name is redacted on p6."
+    },
+    {
+      "section": "Other factors",
+      "rule_ids": [
+        "OTH-4"
+      ],
+      "status": "not_in_packet",
+      "evidence": [
+        {
+          "quote": "Communicable Diseases/Isolation describe: (blank)",
+          "page": 7,
+          "document_index": 3
+        }
+      ],
+      "note": "No isolation order or status documented. Flu/RSV/COVID NAAT negative (p10)."
+    },
+    {
+      "section": "End of life",
+      "rule_ids": [
+        "EOL-1"
+      ],
+      "status": "not_applicable",
+      "evidence": [
+        {
+          "quote": "Advanced Directives: No-Information Given",
+          "page": 2,
+          "document_index": 1
+        }
+      ],
+      "note": "No hospice or POLST documented."
+    },
+    {
+      "section": "Infection control",
+      "rule_ids": [
+        "INF-1"
+      ],
+      "status": "not_in_packet",
+      "evidence": [],
+      "note": "No MRSA swab in the packet. The rule applies to inpatient referrals; this is an ED referral (face sheet 'Patient Class: Emergency'), but the CalAIM form says 'Currently in Hospital? X Yes'."
+    },
+    {
+      "section": "Infection control",
+      "rule_ids": [
+        "INF-2"
+      ],
+      "status": "cannot_determine",
+      "evidence": [
+        {
+          "quote": "SARS-CoV-2, NAAT (COVID-19) Negative Negative",
+          "page": 10,
+          "document_index": 5
+        },
+        {
+          "quote": "SARS-CoV-2, NAAT (COVID-19) Negative",
+          "page": 17,
+          "document_index": 6
+        }
+      ],
+      "note": "Negative result present, but the collection date/time is redacted, so the 24-hour window can't be checked."
+    },
+    {
+      "section": "Form-only exclusions",
+      "rule_ids": [
+        "FORM-X4",
+        "FORM-X5"
+      ],
+      "status": "documented",
+      "evidence": [
+        {
+          "quote": "PPD/TB test or Chest XRAY performed? [X] yes ... Results: Neg",
+          "page": 3,
+          "document_index": 2
+        },
+        {
+          "quote": "TB Test or Chest X-Ray Performed? [X] YES ... Results: [ ] Positive [X] Negative",
+          "page": 6,
+          "document_index": 3
+        },
+        {
+          "quote": "Impression: No acute thoracic abnormality.",
+          "page": 12,
+          "document_index": 5
+        },
+        {
+          "quote": "SUBSTANCE ABUSE? [X] None",
+          "page": 3,
+          "document_index": 2
+        },
+        {
+          "quote": "Drug use: Not Currently",
+          "page": 16,
+          "document_index": 6
+        }
+      ],
+      "note": "The TB test type (PPD vs CXR) is unspecified and its date is redacted. MRSA and C. diff are not mentioned. No detox refusal is documented."
+    },
+    {
+      "section": "Diabetes",
+      "rule_ids": [
+        "DM-1",
+        "DM-2",
+        "DM-3",
+        "DM-4",
+        "DM-5",
+        "DM-6",
+        "DM-Q1",
+        "DM-Q2",
+        "DM-Q3"
+      ],
+      "status": "not_applicable",
+      "evidence": [
+        {
+          "quote": "Diabetic? [X] No",
+          "page": 3,
+          "document_index": 2
+        },
+        {
+          "quote": "Glucose 101 74 - 106 mg/dL",
+          "page": 10,
+          "document_index": 5
+        }
+      ],
+      "note": "No diabetes in the PMH or on the forms. One serum glucose of 101."
+    },
+    {
+      "section": "Infection",
+      "rule_ids": [
+        "ID-1"
+      ],
+      "status": "documented",
+      "evidence": [
+        {
+          "quote": "Patient Vitals for the past 24 hrs: BP 178/79 Temp 36.6 °C (97.9 °F) Oral Pulse 72 Resp 16 SpO2 98 %",
+          "page": 19,
+          "document_index": 6
+        },
+        {
+          "quote": "Lactate 0.8 mmol/L",
+          "page": 10,
+          "document_index": 5
+        },
+        {
+          "quote": "White Blood Cells 7.46",
+          "page": 11,
+          "document_index": 5
+        },
+        {
+          "quote": "Procalcitonin 0.10 ^ ng/mL",
+          "page": 17,
+          "document_index": 6
+        }
+      ],
+      "note": "One set of vitals, not 5. Afebrile, HR 72, BP 178/79. Procalcitonin flagged abnormal. MDM has a '{Sepsis Doc [redacted]' template line (p21)."
+    },
+    {
+      "section": "Infection",
+      "rule_ids": [
+        "ID-2"
+      ],
+      "status": "cannot_determine",
+      "evidence": [
+        {
+          "quote": "has been on a course of Doxycycline for 8 days",
+          "page": 14,
+          "document_index": 6
+        },
+        {
+          "quote": "ED Prescriptions None",
+          "page": 21,
+          "document_index": 6
+        }
+      ],
+      "note": "She has been on outpatient oral doxycycline. No discharge antibiotic plan or prescription is documented."
+    },
+    {
+      "section": "Infection",
+      "rule_ids": [
+        "ID-3",
+        "INT-E3"
+      ],
+      "status": "cannot_determine",
+      "evidence": [
+        {
+          "quote": "cefepime (MAXIPIME) 2 g ... Intravenous Given",
+          "page": 12,
+          "document_index": 5
+        },
+        {
+          "quote": "IV Antibiotics: [ ] YES [X] NO",
+          "page": 7,
+          "document_index": 3
+        },
+        {
+          "quote": "Service: [ ] PT [ ] OT [ ] Speech [ ] Wound Care",
+          "page": 6,
+          "document_index": 3
+        }
+      ],
+      "note": "She got IV antibiotics in the ED, but the CalAIM form says no IV antibiotics going forward. No home health order. Disposition is blank."
+    },
+    {
+      "section": "Infection",
+      "rule_ids": [
+        "ID-Q1"
+      ],
+      "status": "documented",
+      "evidence": [
+        {
+          "quote": "right leg pain for about 1 month with associated redness and swelling from her shin to her toes",
+          "page": 14,
+          "document_index": 6
+        },
+        {
+          "quote": "Erythema to the right anterior shin that is blanchable. Slightly hot to touch.",
+          "page": 17,
+          "document_index": 6
+        },
+        {
+          "quote": "right leg cellulitis",
+          "page": 6,
+          "document_index": 3
+        }
+      ],
+      "note": ""
+    },
+    {
+      "section": "Infection",
+      "rule_ids": [
+        "ID-Q2"
+      ],
+      "status": "not_in_packet",
+      "evidence": [
+        {
+          "quote": "Culture, Blood [redacted] Order Status: Sent Specimen: Peripheral Blood",
+          "page": 11,
+          "document_index": 5
+        },
+        {
+          "quote": "Urinalysis, Reflex Microscopic and/or Culture ... Order Status: Sent",
+          "page": 19,
+          "document_index": 6
+        }
+      ],
+      "note": "Cultures were ordered (blood x2, urine). No results are in the packet."
+    },
+    {
+      "section": "Infection",
+      "rule_ids": [
+        "ID-Q3"
+      ],
+      "status": "not_in_packet",
+      "evidence": [],
+      "note": "Isolation not stated."
+    },
+    {
+      "section": "Respiratory",
+      "rule_ids": [
+        "RESP-1"
+      ],
+      "status": "documented",
+      "evidence": [
+        {
+          "quote": "XR Chest AP Portable (Final result) ... No acute thoracic abnormality.",
+          "page": 12,
+          "document_index": 5
+        },
+        {
+          "quote": "Lungs are clear. No pleural effusion or pneumothorax.",
+          "page": 12,
+          "document_index": 5
+        }
+      ],
+      "note": "No acute respiratory illness. History of asthma and OSA on CPAP."
+    },
+    {
+      "section": "Respiratory",
+      "rule_ids": [
+        "RESP-2",
+        "RESP-3"
+      ],
+      "status": "documented",
+      "evidence": [
+        {
+          "quote": "SpO2 98 % O2 Device room air",
+          "page": 13,
+          "document_index": 5
+        },
+        {
+          "quote": "Requires O2? [ ] Yes [X] No",
+          "page": 3,
+          "document_index": 2
+        },
+        {
+          "quote": "[ ] Requires O2 (Explain): None",
+          "page": 6,
+          "document_index": 3
+        }
+      ],
+      "note": "One SpO2 reading. O2 not required."
+    },
+    {
+      "section": "Respiratory",
+      "rule_ids": [
+        "RESP-4",
+        "RESP-Q1",
+        "RESP-Q2"
+      ],
+      "status": "documented",
+      "evidence": [
+        {
+          "quote": "Levalbuterol Tartrate (XOPENEX HFA INHAL) Inhale 2 puffs into the lungs EVERY 4 TO 6 HOURS AS NEEDED (Exacerbation of asthma).",
+          "page": 16,
+          "document_index": 6
+        },
+        {
+          "quote": "Sleep apnea USES CPAP MACHINE",
+          "page": 15,
+          "document_index": 6
+        }
+      ],
+      "note": "No respiratory therapy notes (RESP-4 not_in_packet). PRN levalbuterol inhaler. Antibiotics are for cellulitis, not a respiratory condition."
+    },
+    {
+      "section": "Cardiac",
+      "rule_ids": [
+        "CARD-1"
+      ],
+      "status": "cannot_determine",
+      "evidence": [
+        {
+          "quote": "BP: 178/79",
+          "page": 16,
+          "document_index": 6
+        },
+        {
+          "quote": "losartan (COZAAR) 50 mg tablet Take 1 tablet by mouth Daily.",
+          "page": 16,
+          "document_index": 6
+        },
+        {
+          "quote": "recommendation to follow up with a primary care provider and obtain reassessment of their blood pressure within three months.",
+          "page": 22,
+          "document_index": 6
+        }
+      ],
+      "note": "Only one BP reading (178/79). The 24-hour stability window can't be checked. Hypertension is not in the PMH list; she is on losartan."
+    },
+    {
+      "section": "Cardiac",
+      "rule_ids": [
+        "CARD-2"
+      ],
+      "status": "not_in_packet",
+      "evidence": [],
+      "note": "No troponin in the results."
+    },
+    {
+      "section": "Cardiac",
+      "rule_ids": [
+        "CARD-3"
+      ],
+      "status": "cannot_determine",
+      "evidence": [
+        {
+          "quote": "ECG 12 lead (Preliminary result) ... INTERPRETATION TEXT Not Confirmed",
+          "page": 12,
+          "document_index": 5
+        },
+        {
+          "quote": "EKG reviewed and interpreted by me: Date [redacted] ** Time: *** Rate: *** Rhythm: [redacted] Interpretation:",
+          "page": 20,
+          "document_index": 6
+        }
+      ],
+      "note": "An ECG was done, but the interpretation is unconfirmed, the provider template is unfilled, and the rhythm is redacted."
+    },
+    {
+      "section": "Cardiac",
+      "rule_ids": [
+        "CARD-4"
+      ],
+      "status": "contradictory",
+      "evidence": [
+        {
+          "quote": "Atrial fibrillation (HCC) ... Paroxysmal atrial fibrillation (HCC)",
+          "page": 15,
+          "document_index": 6
+        },
+        {
+          "quote": "apixaban (ELIQUIS) 5 mg tablet Take 1 tablet by mouth 2 times daily.",
+          "page": 16,
+          "document_index": 6
+        },
+        {
+          "quote": "was on Eliquis for 6 months for clotting and was taken off it recently when her blood clot cleared.",
+          "page": 14,
+          "document_index": 6
+        },
+        {
+          "quote": "Anticoagulants?: [X] No",
+          "page": 3,
+          "document_index": 2
+        },
+        {
+          "quote": "[ ] Anticoagulants",
+          "page": 7,
+          "document_index": 3
+        }
+      ],
+      "note": "She has an AF history (s/p ablation). Whether she is currently on apixaban is disputed: the med list says yes, while the HPI and forms say no."
+    },
+    {
+      "section": "Cardiac",
+      "rule_ids": [
+        "CARD-5"
+      ],
+      "status": "not_in_packet",
+      "evidence": [
+        {
+          "quote": "TRANSESOPHAGEAL ECHOCARDIOGRAM Procedure: ECHO - TRANSESEOPHAGEAL / CARDIOVERSION",
+          "page": 15,
+          "document_index": 6
+        }
+      ],
+      "note": "No EF value. A prior TEE is listed in the surgical history without results."
+    },
+    {
+      "section": "Cardiac",
+      "rule_ids": [
+        "CARD-6"
+      ],
+      "status": "documented",
+      "evidence": [
+        {
+          "quote": "Medication Administration - last 24 hours ... cefepime ... lactated ringers (LR) bolus ... vancomycin in saline IVPB",
+          "page": 12,
+          "document_index": 5
+        }
+      ],
+      "note": "The 24-hour MAR lists no IV antihypertensives."
+    },
+    {
+      "section": "Integumentary",
+      "rule_ids": [
+        "INT-E1",
+        "INT-E3"
+      ],
+      "status": "documented",
+      "evidence": [
+        {
+          "quote": "CHIEF COMPLAINT/ADMITTING DIAGNOSIS: Right leg pain, cellulitis",
+          "page": 3,
+          "document_index": 2
+        },
+        {
+          "quote": "ANY WOUNDS? [ ] Yes [X] No",
+          "page": 3,
+          "document_index": 2
+        },
+        {
+          "quote": "XR Foot Right 3 + Vw (Results Pending)",
+          "page": 21,
+          "document_index": 6
+        }
+      ],
+      "note": "Cellulitis treated with outpatient oral doxycycline, then IV cefepime/vancomycin in the ED. The foot X-ray is pending, so osteomyelitis (MSK-X2) is not addressed either way. No wound. No home health/wound care arrangement documented (conditional INT-E3)."
+    },
+    {
+      "section": "Circulatory",
+      "rule_ids": [
+        "CIR-X1",
+        "CIR-E6",
+        "CIR-X2"
+      ],
+      "status": "documented",
+      "evidence": [
+        {
+          "quote": "Cardiovascular: Well perfused, normal rhythm, no murmurs.",
+          "page": 16,
+          "document_index": 6
+        },
+        {
+          "quote": "ABLATION OF DYSRHYTHMIC FOCUS ... CV EP ABLATION A-FIB",
+          "page": 15,
+          "document_index": 6
+        },
+        {
+          "quote": "BP: 178/79",
+          "page": 16,
+          "document_index": 6
+        }
+      ],
+      "note": "Exam rhythm normal. Paroxysmal AF s/p ablation and cardioversion. BP 178/79 on oral losartan, with no IV BP meds."
+    },
+    {
+      "section": "Musculoskeletal",
+      "rule_ids": [
+        "MSK-E2"
+      ],
+      "status": "not_applicable",
+      "evidence": [
+        {
+          "quote": "Fractures [ ] YES [X] NO",
+          "page": 7,
+          "document_index": 3
+        }
+      ],
+      "note": "No fracture or orthopedic condition requiring PT coordination. Back pain affects walking (p14)."
+    }
+  ],
+  "conditions": [
+    {
+      "condition": "Cellulitis, right lower leg (shin to toes), failing/partially responding to oral doxycycline",
+      "source": "ED provider note HPI/exam; referral forms",
+      "pages": [
+        3,
+        6,
+        14,
+        17
+      ],
+      "candidate_rule_ids": [
+        "INT-E1",
+        "INT-E3",
+        "ID-1",
+        "ID-2",
+        "ID-3",
+        "MSK-X2"
+      ]
+    },
+    {
+      "condition": "Atrial fibrillation / paroxysmal AF, s/p ablation and TEE/cardioversion",
+      "source": "PMH / surgical history",
+      "pages": [
+        14,
+        15,
+        20
+      ],
+      "candidate_rule_ids": [
+        "CARD-4",
+        "CIR-X1",
+        "CARD-3"
+      ]
+    },
+    {
+      "condition": "Elevated BP 178/79 on losartan (hypertension not listed in PMH)",
+      "source": "Vitals, home meds, discharge recommendation",
+      "pages": [
+        13,
+        16,
+        22
+      ],
+      "candidate_rule_ids": [
+        "CARD-1",
+        "CARD-6",
+        "CIR-E6",
+        "CIR-X2",
+        "CIR-E4"
+      ]
+    },
+    {
+      "condition": "History of blood clot treated with apixaban x6 months (venous duplex pending)",
+      "source": "ED provider note HPI; imaging list",
+      "pages": [
+        12,
+        14,
+        21
+      ],
+      "candidate_rule_ids": [
+        "CARD-4",
+        "RSP-X4"
+      ]
+    },
+    {
+      "condition": "Asthma (levalbuterol PRN; menthol trigger)",
+      "source": "PMH, meds, allergies",
+      "pages": [
+        13,
+        15,
+        16
+      ],
+      "candidate_rule_ids": [
+        "RSP-E4",
+        "RESP-Q1"
+      ]
+    },
+    {
+      "condition": "Obstructive sleep apnea, uses CPAP",
+      "source": "PMH",
+      "pages": [
+        15
+      ],
+      "candidate_rule_ids": [
+        "RSP-E7"
+      ]
+    },
+    {
+      "condition": "Bipolar 1 disorder",
+      "source": "PMH; referral forms",
+      "pages": [
+        3,
+        7,
+        15
+      ],
+      "candidate_rule_ids": [
+        "MH-1",
+        "MH-2",
+        "MH-3",
+        "MH-5"
+      ]
+    },
+    {
+      "condition": "Schizophrenia",
+      "source": "PMH; referral forms",
+      "pages": [
+        3,
+        7,
+        15
+      ],
+      "candidate_rule_ids": [
+        "MH-1",
+        "MH-2",
+        "MH-3",
+        "MH-5"
+      ]
+    },
+    {
+      "condition": "Acid reflux disease / Barrett esophagus",
+      "source": "PMH",
+      "pages": [
+        15
+      ],
+      "candidate_rule_ids": [
+        "GI-E6"
+      ]
+    },
+    {
+      "condition": "Anemia",
+      "source": "PMH",
+      "pages": [
+        14,
+        15
+      ],
+      "candidate_rule_ids": []
+    },
+    {
+      "condition": "Back injury from MVA / back pain / arthritis",
+      "source": "PMH; HPI",
+      "pages": [
+        14,
+        15
+      ],
+      "candidate_rule_ids": [
+        "MOB-3"
+      ]
+    },
+    {
+      "condition": "Cataract s/p bilateral cataract surgery (historical)",
+      "source": "PMH",
+      "pages": [
+        15
+      ],
+      "candidate_rule_ids": [
+        "OPH-E3"
+      ]
+    }
+  ],
+  "clinical_data": {
+    "vital_signs": {
+      "status": "documented",
+      "note": "Only one set, repeated on pp. 13, 16, 19. Timestamp redacted. ID-1/RESP-2/CARD-1 ask for 5 sets.",
+      "sets": [
+        {
+          "time": "[redacted]",
+          "temp": "36.6 C (97.9 F) oral",
+          "hr": 72,
+          "bp": "178/79",
+          "rr": 16,
+          "spo2": "98% RA",
+          "page": 19
+        }
+      ]
+    },
+    "glucose_readings": {
+      "status": "not_applicable",
+      "readings": [
+        {
+          "value": "101 mg/dL (serum, CMP)",
+          "page": 10
+        }
+      ],
+      "note": "No diabetes documented."
+    },
+    "a1c": {
+      "status": "not_in_packet"
+    },
+    "insulin": {
+      "status": "not_applicable",
+      "regimen": null,
+      "pump": null,
+      "start_timing": null
+    },
+    "dka_ruled_out": {
+      "status": "not_applicable",
+      "note": "Not diabetic. Anion gap 7, CO2 28 (p10)."
+    },
+    "troponins": {
+      "status": "not_in_packet",
+      "results": []
+    },
+    "ejection_fraction": {
+      "status": "not_in_packet",
+      "value": null,
+      "baseline_stated": null,
+      "note": "Prior TEE listed without results (p15)."
+    },
+    "ekg": {
+      "status": "cannot_determine",
+      "page": 12,
+      "note": "ECG 12 lead preliminary, 'Not Confirmed'. Provider EKG template unfilled; rhythm redacted (p20)."
+    },
+    "iv_bp_meds_24h": {
+      "status": "documented",
+      "result": "none listed on 24-h MAR (cefepime, LR, vancomycin only)",
+      "page": 12
+    },
+    "mrsa_swab": {
+      "status": "not_in_packet"
+    },
+    "covid_swab": {
+      "status": "cannot_determine",
+      "result": "negative (SARS-CoV-2 NAAT)",
+      "page": 10,
+      "note": "Collection date/time redacted."
+    },
+    "cultures": {
+      "status": "not_in_packet",
+      "results": [
+        {
+          "site": "blood x2 (peripheral)",
+          "result": "ordered — 'Order Status: Sent', no result",
+          "page": 11
+        },
+        {
+          "site": "urine (UA reflex culture)",
+          "result": "ordered — 'Order Status: Sent', no result",
+          "page": 19
+        }
+      ]
+    },
+    "chest_imaging": {
+      "status": "documented",
+      "result": "XR Chest AP Portable: No acute thoracic abnormality",
+      "page": 12
+    },
+    "other_imaging": {
+      "status": "cannot_determine",
+      "result": "XR Foot Right 3+ Vw and VAS LE Venous Bilateral — results pending",
+      "page": 21
+    },
+    "oxygen": {
+      "status": "documented",
+      "requirement": "room air",
+      "baseline_spo2": "98%",
+      "page": 13
+    },
+    "isolation": {
+      "status": "not_in_packet"
+    },
+    "iv_access": {
+      "status": "cannot_determine",
+      "type": "peripheral IV implied by IV cefepime/vancomycin/LR in ED; line type not documented",
+      "page": 12
+    },
+    "home_health": {
+      "status": "not_in_packet",
+      "wording": "Authorized Home Health Provider: no service boxes checked; provider name [redacted]",
+      "services": [],
+      "page": 6
+    },
+    "ciwa": {
+      "status": "not_applicable",
+      "scores": []
+    },
+    "mobility": {
+      "status": "contradictory",
+      "distance_ft": 100,
+      "assist_level": "not stated ('with the assistance of her walker')",
+      "device": "seated walker",
+      "wheelchair_dependent": false,
+      "transfers": "not documented",
+      "page": 9,
+      "note": "Triage: 'able to bear some weight' and HPI: 'difficulty walking due to back pain' (p14). No PT eval."
+    },
+    "adls": {
+      "status": "documented",
+      "findings": [
+        {
+          "quote": "Patient is able to independently manage her own ADLS",
+          "page": 9
+        },
+        {
+          "quote": "Independent w/all ADL's? [X] Yes",
+          "page": 3
+        },
+        {
+          "quote": "Requires assistance with ADL's (Explain): NO",
+          "page": 7
+        }
+      ]
+    },
+    "orientation": {
+      "status": "documented",
+      "value": "AOx4",
+      "page": 17
+    },
+    "med_self_admin": {
+      "status": "documented",
+      "value": "Self Administer All Meds? [X] Yes",
+      "page": 3
+    },
+    "anticoagulation": {
+      "status": "contradictory",
+      "value": "apixaban 5 mg BID on home list vs 'taken off it recently' (HPI) vs form 'Anticoagulants? No'",
+      "page": 16
+    },
+    "living_situation": {
+      "status": "documented",
+      "findings": [
+        {
+          "quote": "Currently homeless",
+          "page": 3
+        },
+        {
+          "quote": "Pt states she has been homeless since Friday.",
+          "page": 14
+        },
+        {
+          "quote": "Patient lives a[redacted]",
+          "page": 15
+        }
+      ]
+    }
+  },
+  "time_sensitive_rules": [
+    {
+      "rule_id": "INF-2",
+      "status": "cannot_determine",
+      "surviving_times": [],
+      "note": "COVID NAAT negative; collection date/time redacted."
+    },
+    {
+      "rule_id": "CARD-1",
+      "status": "cannot_determine",
+      "surviving_times": [],
+      "note": "One BP reading (178/79); 24-h oral-med stability can't be shown."
+    },
+    {
+      "rule_id": "CARD-6",
+      "status": "documented",
+      "surviving_times": [],
+      "note": "24-h MAR (start time redacted) shows no IV BP meds."
+    },
+    {
+      "rule_id": "DOC-6",
+      "status": "documented",
+      "surviving_times": [],
+      "note": "'Patient Vitals for the past 24 hrs' has one set; time redacted."
+    },
+    {
+      "rule_id": "DM-3",
+      "status": "not_applicable",
+      "surviving_times": [],
+      "note": "No insulin."
+    },
+    {
+      "rule_id": "DM-4",
+      "status": "not_applicable",
+      "surviving_times": [],
+      "note": "Not diabetic."
+    },
+    {
+      "rule_id": "MH-4",
+      "status": "not_applicable",
+      "surviving_times": [],
+      "note": "No alcohol intoxication."
+    },
+    {
+      "rule_id": "INT-E2",
+      "status": "not_applicable",
+      "surviving_times": [],
+      "note": "No wound / dressing changes documented."
+    },
+    {
+      "rule_id": "INT-E3",
+      "status": "cannot_determine",
+      "surviving_times": [
+        "10:41 AM PDT (provider note e-signature, p21)"
+      ],
+      "note": "IV antibiotics given in ED; no plan for continued IV therapy or home health."
+    }
+  ],
+  "contradictions": [
+    {
+      "topic": "Anticoagulation (apixaban) status",
+      "rule_ids": [
+        "CARD-4",
+        "COG-1"
+      ],
+      "items": [
+        {
+          "quote": "Anticoagulants?: [X] No",
+          "page": 3
+        },
+        {
+          "quote": "[ ] Anticoagulants",
+          "page": 7
+        },
+        {
+          "quote": "apixaban (ELIQUIS) 5 mg tablet Take 1 tablet by mouth 2 times daily.",
+          "page": 12
+        },
+        {
+          "quote": "apixaban (ELIQUIS) 5 mg tablet Take 1 tablet by mouth 2 times daily.",
+          "page": 16
+        },
+        {
+          "quote": "was on Eliquis for 6 months for clotting and was taken off it recently when her blood clot cleared.",
+          "page": 14
+        }
+      ]
+    },
+    {
+      "topic": "Mobility / weight bearing",
+      "rule_ids": [
+        "MOB-1",
+        "MOB-3",
+        "FORM-M6"
+      ],
+      "items": [
+        {
+          "quote": "ambulate 100ft with the assistance of her walker.",
+          "page": 9
+        },
+        {
+          "quote": "Ambulatory? [X] Yes ... Seated walker",
+          "page": 3
+        },
+        {
+          "quote": "Pt is able to bear some weight.",
+          "page": 14
+        },
+        {
+          "quote": "she states she has difficulty walking due to back pain.",
+          "page": 14
+        }
+      ]
+    },
+    {
+      "topic": "Documents marked attached vs. packet contents",
+      "rule_ids": [
+        "MOB-2",
+        "DOC-8",
+        "MH-1"
+      ],
+      "items": [
+        {
+          "quote": "Attached Docs: [X] Face Sheet [X] H&P [X] Med List [X] Psych notes [X] Surgical notes [X] PT/OT Eval.",
+          "page": 3
+        },
+        {
+          "quote": "Recent Surgery [ ] YES [X] NO",
+          "page": 7
+        }
+      ],
+      "note": "The packet has no psych notes, surgical notes, or PT/OT evaluation."
+    },
+    {
+      "topic": "IV antibiotics",
+      "rule_ids": [
+        "OTH-3",
+        "ID-3",
+        "INT-E3"
+      ],
+      "items": [
+        {
+          "quote": "IV Antibiotics: [ ] YES [X] NO",
+          "page": 7
+        },
+        {
+          "quote": "cefepime (MAXIPIME) 2 g ... Intravenous Given",
+          "page": 12
+        },
+        {
+          "quote": "vancomycin in saline IVPB 2 g ... Intravenous New Bag",
+          "page": 12
+        },
+        {
+          "quote": "vancomycin per pharmacy (has no administration in time range)",
+          "page": 22
+        }
+      ]
+    },
+    {
+      "topic": "Diagnosis recorded",
+      "rule_ids": [
+        "INT-E1",
+        "ID-Q1"
+      ],
+      "items": [
+        {
+          "quote": "Right leg pain, cellulitis",
+          "page": 3
+        },
+        {
+          "quote": "right leg cellulitis",
+          "page": 6
+        },
+        {
+          "quote": "ED Diagnosis None",
+          "page": 10
+        },
+        {
+          "quote": "IMPRESSION: *** No diagnosis found.",
+          "page": 21
+        }
+      ]
+    },
+    {
+      "topic": "Leg exam",
+      "rule_ids": [
+        "INT-E1"
+      ],
+      "items": [
+        {
+          "quote": "associated redness and swelling from her shin to her toes",
+          "page": 14
+        },
+        {
+          "quote": "Musculoskeletal: No edema, no tenderness, no cyanosis.",
+          "page": 16
+        },
+        {
+          "quote": "Erythema to the right anterior shin that is blanchable. Slightly hot to touch.",
+          "page": 17
+        }
+      ]
+    },
+    {
+      "topic": "Cellulitis onset",
+      "rule_ids": [
+        "ID-Q1"
+      ],
+      "items": [
+        {
+          "quote": "diagnosed with cellulitis about a month ago.",
+          "page": 14
+        },
+        {
+          "quote": "Patient reports she was diagnosed with cellulitis 8 days ago",
+          "page": 14
+        }
+      ]
+    },
+    {
+      "topic": "Mental health treatment",
+      "rule_ids": [
+        "MH-1"
+      ],
+      "items": [
+        {
+          "quote": "Mental Health DX: No behavorial needs identified [X] Bipolar [X] Schizophrenia [ ] Current treatment:",
+          "page": 7
+        },
+        {
+          "quote": "PTA Home Medications: [no antipsychotic or mood stabilizer listed]",
+          "page": 16
+        }
+      ],
+      "note": "Not a direct conflict. The diagnoses are documented, but no psychiatric medication or treatment is listed."
+    }
+  ],
+  "criteria_gaps_touched": [
+    {
+      "topic": "Home health",
+      "rule_ids": [
+        "OTH-3",
+        "ID-3",
+        "INT-E3"
+      ],
+      "note": "She got IV antibiotics in the ED, but no home health service is checked and the outpatient antibiotic plan is undocumented. The rules' thresholds vary ('established' / 'ordered' / 'coordinated')."
+    },
+    {
+      "topic": "COVID swab within 24 hours of admission",
+      "rule_ids": [
+        "INF-2"
+      ],
+      "note": "Negative NAAT present, but the date is redacted. It may be older than 24 h by arrival."
+    },
+    {
+      "topic": "Not yet",
+      "rule_ids": [
+        "ID-Q2",
+        "MSK-X2"
+      ],
+      "note": "Workup is incomplete at referral: blood/urine cultures sent, foot X-ray and venous duplex pending, MDM/impression/disposition unfilled. The rules have no 're-refer when ready' outcome."
+    },
+    {
+      "topic": "FSP",
+      "rule_ids": [
+        "MH-5"
+      ],
+      "note": "Patient has bipolar 1 and schizophrenia. Conservatorship/FSP status is not addressed."
+    },
+    {
+      "topic": "Referral form version",
+      "rule_ids": [
+        "DOC-1",
+        "FORM-M1",
+        "FORM-M2",
+        "FORM-M3",
+        "FORM-M6",
+        "FORM-X7"
+      ],
+      "note": "The packet uses the older IF 'LA/OC Referral Form' rather than RC0725, so several FORM-M/X items have no direct checkbox."
+    }
+  ],
+  "packet_summary": "73-year-old woman (adult criteria) referred from the emergency department; she was not admitted (face sheet: Patient Class Emergency, inpatient admit N/A). EMS brought her from a grocery store parking lot. She reports being homeless for about 5 days, has no emergency contact, and has Medicare plus CalOptima Medi-Cal. Referral reason: right leg cellulitis, shin to toes. She was on oral doxycycline for 8 days and has felt 'sicker' for 2 days; in the ED she got IV cefepime, vancomycin and an LR bolus. Afebrile (36.6 C), HR 72, RR 16, SpO2 98% on room air, BP 178/79 on losartan. WBC 7.46, lactate 0.8, procalcitonin 0.10 (flagged), flu/RSV/COVID NAAT negative (date redacted), CXR without acute findings. PMH: paroxysmal AF s/p ablation, asthma, OSA on CPAP, bipolar 1, schizophrenia, GERD/Barrett, anemia, back injury. AOx4. Forms report independent ADLs, 100 ft with a seated walker and self-administered meds. Missing or open: blood/urine culture results, right foot X-ray and LE venous duplex (pending), MRSA swab, troponin, EF, a confirmed ECG read, 5 sets of vitals, PT/OT, psych and surgical notes marked as attached, and a discharge/antibiotic/home-health plan (MDM, impression and disposition are unfilled templates). Contradictions: apixaban status (med list BID vs 'taken off it recently' vs form 'No'), walking ability, and IV antibiotics (form 'No' vs given in ED). No psychiatric medications are listed.",
+  "flags": [
+    "Referral form is the older Illumination Foundation 'LA/OC Referral Form' (p3), not RC0725. FORM-M/FORM-X items are mapped from the closest fields.",
+    "ED-only referral: no inpatient admission, so no H&P beyond the ED provider note. The CalAIM form nonetheless says 'Currently in Hospital? X Yes'.",
+    "ED provider note's MDM ('presents to the ED for ***'), impression ('No diagnosis found') and disposition ('None') are unfilled templates (p21).",
+    "Pending results: blood cultures x2, urine culture, XR right foot, bilateral LE venous duplex (pp. 11, 12, 19, 21).",
+    "Anticoagulation contradictory: apixaban 5 mg BID on home med list vs HPI 'taken off it recently' vs referral form 'Anticoagulants? No'.",
+    "Referral form marks PT/OT eval, psych notes and surgical notes as attached. None are in the 22-page packet.",
+    "Only one set of vital signs (BP 178/79). Five sets are requested by ID-1/RESP-2/CARD-1.",
+    "No MRSA swab. COVID NAAT negative but date redacted (INF-2 window can't be checked).",
+    "Bipolar 1 and schizophrenia documented with no psychiatric medications on the home list. No SI or conservatorship/FSP screening documented.",
+    "Large redaction block on p17 covers part of the exam/assessment. Psychiatric exam line partly obscured.",
+    "Page 18 duplicates labs from pages 10-11. Page 9 is near-blank (one sentence).",
+    "OCR performed by visual reading of embedded page images (no OCR engine available). All pages upright; handwriting on pp. 1, 3, 6, 7 legible."
+  ]
+}
