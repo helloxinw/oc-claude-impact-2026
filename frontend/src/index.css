@@ -13,18 +13,18 @@
   --card-foreground: oklch(0.22 0.03 247);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.22 0.03 247);
-  --primary: oklch(0.50 0.095 181);
+  --primary: oklch(0.358 0.165 267); /* Illumination brand blue #182D91 */
   --primary-foreground: oklch(1 0 0);
-  --secondary: oklch(0.955 0.013 205);
+  --secondary: oklch(0.955 0.015 267);
   --secondary-foreground: oklch(0.29 0.028 245);
   --muted: oklch(0.962 0.006 235);
   --muted-foreground: oklch(0.51 0.028 245);
-  --accent: oklch(0.94 0.03 182);
-  --accent-foreground: oklch(0.36 0.075 181);
+  --accent: oklch(0.94 0.035 267);
+  --accent-foreground: oklch(0.32 0.15 267);
   --destructive: oklch(0.56 0.21 25);
   --border: oklch(0.92 0.01 238);
   --input: oklch(0.9 0.01 238);
-  --ring: oklch(0.63 0.09 181);
+  --ring: oklch(0.55 0.15 267);
 }
 
 @theme inline {

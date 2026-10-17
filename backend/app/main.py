@@ -7,6 +7,7 @@ from sqlalchemy import select, text
 
 from app.database import SessionLocal, engine
 from app.models import Referral
+from app.routers.documents import findings_router, router as documents_router
 from app.routers.referrals import router as referrals_router
 
 
@@ -39,6 +40,8 @@ app.add_middleware(
     allow_headers=['Content-Type'],
 )
 app.include_router(referrals_router)
+app.include_router(documents_router)
+app.include_router(findings_router)
 
 
 @app.get('/api/health', tags=['health'])
