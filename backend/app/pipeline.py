@@ -73,12 +73,20 @@ def _build_extraction_findings(document: Document, extraction: dict[str, Any], p
         ))
 
     for doc in extraction.get('documents_present', []):
+        present = doc['present']
+        legible = doc.get('legible', True)
+        if not present:
+            verdict, category, default_note = 'missing', 'missing_document', 'Not found in packet'
+        elif not legible:
+            verdict, category, default_note = 'present_unclear', 'missing_document', 'In packet, but key information is redacted or illegible'
+        else:
+            verdict, category, default_note = 'present', 'extraction', 'Found in packet'
         findings.append(Finding(
             id=str(uuid4()), document_id=document.id, referral_id=document.referral_id,
-            category='missing_document' if not doc['present'] else 'extraction',
-            key=f"document:{doc['doc_id']}", value=doc.get('note') or ('Found in packet' if doc['present'] else 'Not found in packet'),
-            source_page=doc.get('source_page'), verdict='present' if doc['present'] else 'missing',
-            needs_verification=not doc['present'],
+            category=category,
+            key=f"document:{doc['doc_id']}", value=doc.get('note') or default_note,
+            source_page=doc.get('source_page'), verdict=verdict,
+            needs_verification=verdict != 'present',
         ))
 
     return findings

@@ -81,7 +81,14 @@ def list_findings(referral_id: str, db: DbSession):
     referral = db.get(Referral, referral_id)
     if referral is None:
         raise HTTPException(status_code=404, detail='Referral not found')
-    return db.scalars(select(Finding).where(Finding.referral_id == referral_id).order_by(Finding.created_at)).all()
+    # Scoped to the latest document only (same ordering as list_documents): a re-upload otherwise
+    # leaves the previous document's findings in place, so the UI shows both sets merged together.
+    latest_document = db.scalars(
+        select(Document).where(Document.referral_id == referral_id).order_by(Document.uploaded_at.desc()).limit(1)
+    ).first()
+    if latest_document is None:
+        return []
+    return db.scalars(select(Finding).where(Finding.document_id == latest_document.id).order_by(Finding.created_at)).all()
 
 
 @findings_router.patch('/{finding_id}', response_model=FindingRead)

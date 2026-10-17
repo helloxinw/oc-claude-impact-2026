@@ -25,6 +25,12 @@ const verdictStyles: Record<string, string> = {
 }
 const verdictLabels: Record<string, string> = { met: 'Met', not_met: 'Not met', unclear: 'Unclear' }
 const verdictOrder: Record<string, number> = { not_met: 0, unclear: 1, met: 2 }
+const checklistStyles: Record<string, string> = {
+  present: 'border-emerald-200 bg-emerald-50 text-emerald-700',
+  present_unclear: 'border-amber-200 bg-amber-50 text-amber-700',
+  missing: 'border-red-200 bg-red-50 text-red-700',
+}
+const checklistLabels: Record<string, string> = { present: 'Found', present_unclear: 'Present, unclear', missing: 'Missing' }
 
 export function DocumentReview({ referral, onReferralUpdated }: { referral: Referral; onReferralUpdated?: (r: Referral) => void }) {
   const [documents, setDocuments] = useState<ReferralDocument[]>([])
@@ -190,8 +196,8 @@ export function DocumentReview({ referral, onReferralUpdated }: { referral: Refe
                       onClick={clickable ? () => jumpToFinding(f) : undefined}
                       className={`flex items-start gap-2 rounded-md p-1 text-xs transition-colors ${clickable ? 'cursor-pointer hover:bg-muted/60' : ''} ${f.id === activeFindingId ? 'bg-primary/10 ring-1 ring-primary/30' : ''}`}
                     >
-                      <Badge variant="outline" className={f.verdict === 'present' ? 'shrink-0 border-emerald-200 bg-emerald-50 text-emerald-700' : 'shrink-0 border-amber-200 bg-amber-50 text-amber-700'}>
-                        {f.verdict === 'present' ? 'Found' : 'Missing'}
+                      <Badge variant="outline" className={`shrink-0 ${checklistStyles[f.verdict ?? 'missing']}`}>
+                        {checklistLabels[f.verdict ?? 'missing']}
                       </Badge>
                       <div className="leading-5"><span className="font-medium">{f.key.replace('document:', '')}</span> &mdash; <span className="text-muted-foreground">{f.value}</span></div>
                     </div>

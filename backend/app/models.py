@@ -79,7 +79,9 @@ class Finding(Base):
     # Admission-criteria rule id this finding is about, e.g. 'MOB-3' (see backend/app/data/admission_criteria.json).
     rule_id: Mapped[str | None] = mapped_column(String(20), nullable=True)
     source_page: Mapped[int | None] = mapped_column(Integer, nullable=True)
-    # 'met' | 'not_met' | 'unclear' | 'present' | 'missing', depending on category. Null for free-text findings.
+    # 'met' | 'not_met' | 'unclear' | 'present' | 'present_unclear' | 'missing', depending on category.
+    # 'present_unclear': the checklist document is in the packet but its key content is redacted/illegible
+    # (different from 'missing', where the document was never sent). Null for free-text findings.
     verdict: Mapped[str | None] = mapped_column(String(20), nullable=True)
     needs_verification: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True)
     verified: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)

@@ -2,7 +2,7 @@ export type ReferralStatus = 'new' | 'needs_info' | 'ready_for_review' | 'accept
 export type AiDecision = 'yes' | 'no' | 'maybe'
 export type DocumentStatus = 'uploaded' | 'processing' | 'processed' | 'failed'
 export type FindingCategory = 'extraction' | 'eligibility_rule' | 'missing_document' | 'decision'
-export type FindingVerdict = 'met' | 'not_met' | 'unclear' | 'present' | 'missing'
+export type FindingVerdict = 'met' | 'not_met' | 'unclear' | 'present' | 'present_unclear' | 'missing'
 
 export interface Referral {
   id: string

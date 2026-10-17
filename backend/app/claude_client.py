@@ -108,6 +108,15 @@ EXTRACTION_TOOL = {
                     'properties': {
                         'doc_id': {'type': 'string'},
                         'present': {'type': 'boolean'},
+                        'legible': {
+                            'type': 'boolean',
+                            'description': 'Only meaningful when present is true. False if the document itself '
+                                            'is in the packet but its key content is blacked out/redacted, '
+                                            'illegible, or otherwise unusable (e.g. a lab report page is there '
+                                            'but the result value is covered). This is a different problem from '
+                                            'the document never being sent — do not conflate the two. True (or '
+                                            'omit) if present and its content can actually be read.',
+                        },
                         'source_page': {'type': 'integer'},
                         'note': {'type': 'string'},
                     },
@@ -134,7 +143,11 @@ def extract_packet(pages: list[PageContent], criteria: dict[str, Any]) -> dict[s
         "has already been redacted by the hospital — do not attempt to infer or reconstruct one.\n\n"
         "Call record_extraction once with every eligibility-relevant fact you find, each tied to the "
         "page you read it from. Then, for each of these checklist documents, say whether it appears "
-        f"anywhere in the packet:\n{_checklist_text(criteria)}\n\n"
+        "anywhere in the packet (present), and if it does, whether its key content is actually legible "
+        "(legible) — a document that's physically there but whose critical values are blacked out, "
+        "covered, or otherwise unreadable is present=true, legible=false, NOT the same as the document "
+        "never being sent (present=false). Those are different problems for the coordinator and must "
+        f"not be conflated:\n{_checklist_text(criteria)}\n\n"
         f"OCR TEXT:\n{_pages_to_text(pages)}"
     )
     message = client.messages.create(
