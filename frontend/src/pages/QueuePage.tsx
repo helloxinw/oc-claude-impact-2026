@@ -1,7 +1,8 @@
 import { useEffect, useMemo, useState, type ChangeEvent, type FormEvent } from 'react'
 import { Link } from 'react-router-dom'
-import { AlertCircle, CheckCircle2, ChevronRight, ClipboardList, Clock3, FileText, Filter, HeartHandshake, LayoutDashboard, LoaderCircle, Paperclip, Plus, Search, ShieldCheck, X } from 'lucide-react'
+import { AlertCircle, CheckCircle2, ChevronRight, ClipboardList, Clock3, FileText, Filter, LayoutDashboard, LoaderCircle, Paperclip, Plus, Search, ShieldCheck, X } from 'lucide-react'
 import { api } from '@/api'
+import logo from '@/assets/logo.png'
 import type { NewReferral, Referral, ReferralStatus } from '@/types'
 import { AiDecisionBadge, formatDate, PacketStatusBadge, statuses, StatusBadge } from '@/lib/referralUi'
 import { Badge } from '@/components/ui/badge'
@@ -73,7 +74,7 @@ export function QueuePage() {
   return <div className="min-h-screen bg-background lg:flex">
     <aside className="hidden w-[234px] shrink-0 flex-col border-r bg-white px-4 py-6 lg:flex">
       <div className="flex items-center gap-2.5 px-2">
-        <div className="flex size-9 items-center justify-center rounded-xl bg-primary text-white"><HeartHandshake className="size-5"/></div>
+        <img src={logo} alt="" className="h-7 w-auto"/>
         <div className="text-[17px] font-semibold tracking-tight">Referral<span className="text-primary">Flow</span></div>
       </div>
       <p className="mb-3 mt-12 px-3 text-[10px] font-bold uppercase tracking-[0.14em] text-muted-foreground">Workspace</p>
