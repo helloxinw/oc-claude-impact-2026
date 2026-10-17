@@ -4,6 +4,7 @@ admission criteria, and persistence.
 Kept separate from the router so the Claude-calling logic can be exercised by a standalone script
 without spinning up FastAPI or a database.
 """
+import logging
 from datetime import datetime, timezone
 from typing import Any
 from uuid import uuid4
@@ -12,7 +13,10 @@ from sqlalchemy.orm import Session
 
 from app.claude_client import classify_referral, extract_packet, load_criteria
 from app.models import Document, Finding
+from app.pdf_bookmarks import add_bookmarks, build_outline_entries
 from app.pdf_extract import extract_pages
+
+logger = logging.getLogger(__name__)
 
 
 def _utc_now() -> datetime:
@@ -93,6 +97,11 @@ def process_document(db: Session, document: Document, file_bytes: bytes) -> None
         criteria = load_criteria()
         extraction = extract_packet(pages, criteria)
         classification = classify_referral(extraction, criteria)
+
+        try:
+            add_bookmarks(document.file_path, build_outline_entries(extraction, classification))
+        except Exception:
+            logger.exception('Failed to write PDF bookmarks for document %s; continuing without them.', document.id)
 
         db.add_all(_build_extraction_findings(document, extraction))
         db.add_all(_build_classification_findings(document, classification))

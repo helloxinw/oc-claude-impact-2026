@@ -1,4 +1,4 @@
-import type { Finding, NewReferral, Referral, ReferralDocument, ReferralStatus } from './types'
+import type { AiDecision, Finding, FindingVerdict, NewReferral, Referral, ReferralDocument, ReferralStatus } from './types'
 
 async function request<T>(path: string, options?: RequestInit): Promise<T> {
   const res = await fetch(`/api${path}`, {
@@ -31,12 +31,14 @@ export const api = {
     request<Referral>('/referrals', { method: 'POST', body: JSON.stringify(data) }),
   updateStatus: (id: string, status: ReferralStatus) =>
     request<Referral>(`/referrals/${id}`, { method: 'PATCH', body: JSON.stringify({ status }) }),
+  updateCoordinatorDecision: (id: string, decision: AiDecision, note: string) =>
+    request<Referral>(`/referrals/${id}/decision`, { method: 'PATCH', body: JSON.stringify({ decision, note }) }),
   health: () => request<{ status: string; database: string }>('/health'),
   uploadDocument: (referralId: string, file: File) =>
     upload<ReferralDocument>(`/referrals/${referralId}/documents`, file),
   listDocuments: (referralId: string) => request<ReferralDocument[]>(`/referrals/${referralId}/documents`),
   documentFileUrl: (referralId: string, documentId: string) => `/api/referrals/${referralId}/documents/${documentId}/file`,
   listFindings: (referralId: string) => request<Finding[]>(`/referrals/${referralId}/findings`),
-  verifyFinding: (findingId: string, verified: boolean) =>
-    request<Finding>(`/findings/${findingId}`, { method: 'PATCH', body: JSON.stringify({ verified }) }),
+  reviewFinding: (findingId: string, review: { verified: boolean; override_verdict: FindingVerdict | null; coordinator_note: string }) =>
+    request<Finding>(`/findings/${findingId}`, { method: 'PATCH', body: JSON.stringify(review) }),
 }

@@ -1,12 +1,13 @@
 import { useEffect, useState, type ChangeEvent } from 'react'
-import { AlertTriangle, CheckCircle2, CircleHelp, ExternalLink, FileWarning, Loader2, ShieldAlert, Upload, XCircle } from 'lucide-react'
+import { AlertTriangle, Check, CheckCircle2, CircleHelp, ExternalLink, FileWarning, Loader2, ShieldAlert, Upload, XCircle } from 'lucide-react'
 import { api } from '@/api'
-import type { AiDecision, Finding, Referral, ReferralDocument } from '@/types'
+import type { AiDecision, Finding, FindingVerdict, Referral, ReferralDocument } from '@/types'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Progress } from '@/components/ui/progress'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { Textarea } from '@/components/ui/textarea'
 
 const decisionStyles: Record<AiDecision, string> = {
   yes: 'border-emerald-200 bg-emerald-50 text-emerald-800',
@@ -70,6 +71,10 @@ export function DocumentReview({ referral, onReferralUpdated }: { referral: Refe
     }
   }
 
+  function updateFinding(updated: Finding) {
+    setFindings((prev) => prev.map((f) => (f.id === updated.id ? updated : f)))
+  }
+
   const latestDocument = documents[0]
   const patientSummary = findings.find((f) => f.key === 'patient_summary')
   const fields = findings.filter((f) => f.category === 'extraction' && f.key !== 'patient_summary' && !f.key.startsWith('document:'))
@@ -77,6 +82,7 @@ export function DocumentReview({ referral, onReferralUpdated }: { referral: Refe
   const ruleFindings = [...findings.filter((f) => f.category === 'eligibility_rule')]
     .sort((a, b) => (verdictOrder[a.verdict ?? 'met'] ?? 2) - (verdictOrder[b.verdict ?? 'met'] ?? 2))
   const flagFindings = findings.filter((f) => f.category === 'decision' && f.key.startsWith('flag:'))
+  const reviewedCount = ruleFindings.filter((f) => f.verified).length
 
   function jumpToFinding(finding: Finding) {
     if (!finding.source_page) return
@@ -129,7 +135,7 @@ export function DocumentReview({ referral, onReferralUpdated }: { referral: Refe
 
       {!uploading && latestDocument?.status === 'processed' && (
         <div className="mt-4 grid gap-4 lg:grid-cols-2">
-          <div className="min-w-0">
+          <div className="min-w-0 lg:sticky lg:top-4 lg:self-start">
             <div className="mb-2 flex items-center justify-between">
               <p className="text-[11px] font-semibold uppercase tracking-widest text-muted-foreground">
                 {latestDocument.filename} &middot; {activePage ? `viewing p.${activePage} of ` : ''}{latestDocument.page_count} pages
@@ -144,6 +150,7 @@ export function DocumentReview({ referral, onReferralUpdated }: { referral: Refe
               src={`${api.documentFileUrl(referral.id, latestDocument.id)}${activePage ? `#page=${activePage}` : ''}`}
               className={`h-[75vh] min-h-[520px] w-full rounded-lg border bg-muted/20 transition-shadow duration-300 ${flash ? 'ring-4 ring-primary/50' : ''}`}
             />
+            <p className="mt-1.5 text-[11px] text-muted-foreground">Tip: the PDF's own outline panel (sidebar icon in the viewer toolbar) jumps straight to any page a fact or criterion came from.</p>
           </div>
 
           <div className="min-w-0">
@@ -171,9 +178,11 @@ export function DocumentReview({ referral, onReferralUpdated }: { referral: Refe
               </div>
             )}
 
+            <CoordinatorDecisionPanel referral={referral} onUpdated={(r) => onReferralUpdated?.(r)} />
+
             <Tabs defaultValue="eligibility">
               <TabsList>
-                <TabsTrigger value="eligibility">Criteria ({ruleFindings.length})</TabsTrigger>
+                <TabsTrigger value="eligibility">Criteria ({reviewedCount}/{ruleFindings.length} reviewed)</TabsTrigger>
                 <TabsTrigger value="facts">Extracted facts ({fields.length})</TabsTrigger>
                 <TabsTrigger value="checklist">Checklist ({checklist.length})</TabsTrigger>
               </TabsList>
@@ -185,7 +194,9 @@ export function DocumentReview({ referral, onReferralUpdated }: { referral: Refe
                     <p className="text-xs leading-5">{patientSummary.value}</p>
                   </div>
                 )}
-                {ruleFindings.map((f) => <RuleRow key={f.id} finding={f} active={f.id === activeFindingId} onClick={() => jumpToFinding(f)} />)}
+                {ruleFindings.map((f) => (
+                  <RuleRow key={f.id} finding={f} active={f.id === activeFindingId} onClick={() => jumpToFinding(f)} onReviewed={updateFinding} />
+                ))}
                 {ruleFindings.length === 0 && <p className="text-xs text-muted-foreground">No criteria evaluated.</p>}
               </TabsContent>
 
@@ -225,23 +236,143 @@ function DecisionIcon({ decision }: { decision: AiDecision }) {
   return <Icon className="mt-0.5 size-5 shrink-0" />
 }
 
-function RuleRow({ finding, active, onClick }: { finding: Finding; active: boolean; onClick: () => void }) {
-  const clickable = Boolean(finding.source_page)
-  const style = finding.verdict ? verdictStyles[finding.verdict] : ''
-  return (
-    <div
-      onClick={clickable ? onClick : undefined}
-      className={`rounded-lg border p-2.5 transition-colors ${clickable ? 'cursor-pointer hover:bg-muted/60' : ''} ${active ? 'border-primary/40 bg-primary/5 ring-1 ring-primary/30' : ''}`}
-    >
-      <div className="flex items-center gap-2">
-        <Badge variant="outline" className={`shrink-0 text-[10px] ${style}`}>{finding.verdict ? verdictLabels[finding.verdict] : 'N/A'}</Badge>
-        <span className="text-xs font-semibold">{finding.rule_id}</span>
-        {finding.source_page && <span className="text-xs font-normal text-muted-foreground">p.{finding.source_page}</span>}
+function CoordinatorDecisionPanel({ referral, onUpdated }: { referral: Referral; onUpdated: (r: Referral) => void }) {
+  const [decision, setDecision] = useState<AiDecision | null>(referral.coordinator_decision)
+  const [note, setNote] = useState(referral.coordinator_decision_note ?? '')
+  const [editing, setEditing] = useState(!referral.coordinator_decision)
+  const [saving, setSaving] = useState(false)
+  const [error, setError] = useState('')
+
+  async function save() {
+    if (!decision) return
+    setSaving(true)
+    setError('')
+    try {
+      const updated = await api.updateCoordinatorDecision(referral.id, decision, note)
+      onUpdated(updated)
+      setEditing(false)
+    } catch (e) {
+      setError(e instanceof Error ? e.message : 'Failed to save your decision')
+    } finally {
+      setSaving(false)
+    }
+  }
+
+  if (!editing && referral.coordinator_decision) {
+    return (
+      <div className={`mb-4 rounded-lg border p-3 ${decisionStyles[referral.coordinator_decision]}`}>
+        <div className="flex items-center justify-between gap-2">
+          <div className="flex items-center gap-2 text-sm font-semibold">
+            <DecisionIcon decision={referral.coordinator_decision} />
+            Coordinator decision: {decisionLabels[referral.coordinator_decision]}
+          </div>
+          <Button size="sm" variant="outline" className="h-7 shrink-0 px-2 text-[11px]" onClick={() => setEditing(true)}>Edit</Button>
+        </div>
+        {referral.coordinator_decision_note && <p className="mt-1 text-xs leading-5">{referral.coordinator_decision_note}</p>}
+        {referral.coordinator_decision_at && (
+          <p className="mt-1 text-[10px] text-muted-foreground">Recorded {new Date(referral.coordinator_decision_at).toLocaleString()}</p>
+        )}
       </div>
-      <p className="mt-1 text-xs leading-5">
-        {finding.evidence ? <span className="font-medium">{finding.evidence}</span> : <span className="italic text-muted-foreground">Not found in packet</span>}
-      </p>
-      <p className="mt-0.5 text-xs leading-5 text-muted-foreground">{finding.value}</p>
+    )
+  }
+
+  return (
+    <div className="mb-4 rounded-lg border border-dashed p-3">
+      <p className="mb-2 text-xs font-semibold">Your decision</p>
+      <div className="flex flex-wrap gap-1.5">
+        <Button size="sm" variant={decision === 'yes' ? 'default' : 'outline'} className="h-7 px-2.5 text-xs" onClick={() => setDecision('yes')}>Approve</Button>
+        <Button size="sm" variant={decision === 'no' ? 'default' : 'outline'} className="h-7 px-2.5 text-xs" onClick={() => setDecision('no')}>Deny</Button>
+        <Button size="sm" variant={decision === 'maybe' ? 'default' : 'outline'} className="h-7 px-2.5 text-xs" onClick={() => setDecision('maybe')}>Needs more info</Button>
+      </div>
+      <Textarea className="mt-2 text-xs" rows={2} placeholder="Notes for the record (optional)" value={note} onChange={(e) => setNote(e.target.value)} />
+      {error && <p className="mt-1 text-[11px] text-red-700">{error}</p>}
+      <div className="mt-2 flex justify-end gap-2">
+        {referral.coordinator_decision && <Button size="sm" variant="ghost" className="h-7 px-2 text-[11px]" onClick={() => setEditing(false)}>Cancel</Button>}
+        <Button size="sm" className="h-7 px-2.5 text-xs" disabled={!decision || saving} onClick={() => void save()}>
+          {saving ? <Loader2 className="size-3 animate-spin" /> : <Check className="size-3" />}Save decision
+        </Button>
+      </div>
+    </div>
+  )
+}
+
+function RuleRow({ finding, active, onClick, onReviewed }: { finding: Finding; active: boolean; onClick: () => void; onReviewed: (f: Finding) => void }) {
+  const [expanded, setExpanded] = useState(false)
+  const [overrideDraft, setOverrideDraft] = useState<FindingVerdict | null>(finding.override_verdict)
+  const [noteDraft, setNoteDraft] = useState(finding.coordinator_note ?? '')
+  const [saving, setSaving] = useState(false)
+  const [saveError, setSaveError] = useState('')
+
+  const clickable = Boolean(finding.source_page)
+  const effectiveVerdict = finding.override_verdict ?? finding.verdict
+  const style = effectiveVerdict ? verdictStyles[effectiveVerdict] : ''
+  const overridden = Boolean(finding.override_verdict && finding.override_verdict !== finding.verdict)
+
+  async function handleSave() {
+    setSaving(true)
+    setSaveError('')
+    try {
+      const updated = await api.reviewFinding(finding.id, { verified: true, override_verdict: overrideDraft, coordinator_note: noteDraft })
+      onReviewed(updated)
+      setExpanded(false)
+    } catch (e) {
+      setSaveError(e instanceof Error ? e.message : 'Failed to save')
+    } finally {
+      setSaving(false)
+    }
+  }
+
+  return (
+    <div className={`rounded-lg border transition-colors ${active ? 'border-primary/40 bg-primary/5 ring-1 ring-primary/30' : ''}`}>
+      <div onClick={clickable ? onClick : undefined} className={clickable ? 'cursor-pointer p-2.5' : 'p-2.5'}>
+        <div className="flex items-center gap-2">
+          <Badge variant="outline" className={`shrink-0 text-[10px] ${style}`}>{effectiveVerdict ? verdictLabels[effectiveVerdict] : 'N/A'}</Badge>
+          {overridden && <Badge variant="outline" className="shrink-0 border-violet-200 bg-violet-50 text-[10px] text-violet-700">overridden</Badge>}
+          <span className="text-xs font-semibold">{finding.rule_id}</span>
+          {finding.source_page && <span className="text-xs font-normal text-muted-foreground">p.{finding.source_page}</span>}
+          {finding.verified && <CheckCircle2 className="ml-auto size-3.5 shrink-0 text-emerald-600" />}
+        </div>
+        <p className="mt-1 text-xs leading-5">
+          {finding.evidence ? <span className="font-medium">{finding.evidence}</span> : <span className="italic text-muted-foreground">Not found in packet</span>}
+        </p>
+        <p className="mt-0.5 text-xs leading-5 text-muted-foreground">{finding.value}</p>
+        {finding.coordinator_note && (
+          <p className="mt-1.5 rounded bg-violet-50 px-2 py-1 text-xs leading-5 text-violet-900"><b>Coordinator:</b> {finding.coordinator_note}</p>
+        )}
+      </div>
+      <div className="border-t px-2.5 py-1.5" onClick={(e) => e.stopPropagation()}>
+        <button type="button" onClick={() => setExpanded((v) => !v)} className="text-[11px] font-medium text-primary hover:underline">
+          {expanded ? 'Close' : finding.verified ? 'Edit review' : 'Review this'}
+        </button>
+        {expanded && (
+          <div className="mt-2 space-y-2">
+            <div className="flex flex-wrap items-center gap-1.5">
+              <span className="text-[11px] text-muted-foreground">Your verdict:</span>
+              {(['met', 'not_met', 'unclear'] as const).map((v) => {
+                const isActive = (overrideDraft ?? finding.verdict) === v
+                return (
+                  <button
+                    key={v}
+                    type="button"
+                    onClick={() => setOverrideDraft(v === finding.verdict ? null : v)}
+                    className={`rounded-full border px-2 py-0.5 text-[11px] ${isActive ? verdictStyles[v] : 'text-muted-foreground hover:bg-muted/60'}`}
+                  >
+                    {verdictLabels[v]}
+                  </button>
+                )
+              })}
+            </div>
+            <Textarea rows={2} className="text-xs" placeholder="Add a note (optional)" value={noteDraft} onChange={(e) => setNoteDraft(e.target.value)} />
+            {saveError && <p className="text-[11px] text-red-700">{saveError}</p>}
+            <div className="flex justify-end gap-2">
+              <Button size="sm" variant="outline" className="h-6 px-2 text-[11px]" onClick={() => setExpanded(false)} disabled={saving}>Cancel</Button>
+              <Button size="sm" className="h-6 px-2 text-[11px]" disabled={saving} onClick={() => void handleSave()}>
+                {saving ? <Loader2 className="size-3 animate-spin" /> : <Check className="size-3" />}Save
+              </Button>
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   )
 }

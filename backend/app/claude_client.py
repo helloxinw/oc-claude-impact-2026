@@ -16,7 +16,7 @@ from app.pdf_extract import PageContent
 
 MODEL = os.environ.get('ANTHROPIC_MODEL', 'claude-sonnet-5-5')
 MAX_TOKENS = 8000
-CLASSIFY_MAX_TOKENS = 12000
+CLASSIFY_MAX_TOKENS = 16000
 CRITERIA_PATH = Path(__file__).resolve().parent / 'data' / 'admission_criteria.json'
 
 _client: anthropic.Anthropic | None = None
@@ -144,33 +144,23 @@ CLASSIFICATION_TOOL = {
     'description': 'Record the eligibility decision for this referral against IHH admission criteria.',
     'input_schema': {
         'type': 'object',
+        # Field order here is also roughly the order Claude tends to generate them in. The two
+        # scalar decision fields are listed first and kept short so they land safely inside the
+        # token budget even if the (much longer) rule_verdicts array ends up truncated.
         'properties': {
-            'rule_verdicts': {
+            'overall_decision': {'type': 'string', 'enum': ['yes', 'no', 'maybe']},
+            'overall_reasoning': {
+                'type': 'string',
+                'description': 'A short paragraph (3-5 sentences) a coordinator can read as-is, citing rule ids.',
+            },
+            'flags_for_human_review': {
                 'type': 'array',
-                'description': 'One entry per admission-criteria rule evaluated. Include every rule in '
-                                '`general` and `rules`, every FORM-X4/FORM-X5 check, and any applicable '
-                                '`by_system` entries — even ones where nothing was found (value_found null, '
-                                'verdict "unclear").',
+                'description': 'Case-by-case or judgment-call items (e.g. registered sex offender, '
+                                'immediately post-neurosurgery) that must never be auto-decided. One sentence each.',
                 'items': {
                     'type': 'object',
-                    'properties': {
-                        'rule_id': {'type': 'string'},
-                        'value_found': {
-                            'type': ['string', 'null'],
-                            'description': 'The specific fact from the packet this verdict is based on, close to '
-                                            'how it reads in the extracted data (e.g. "Ambulates 100+ ft with '
-                                            'walker, modified independence, p.8"). Null if nothing relevant to '
-                                            'this rule was found anywhere in the packet.',
-                        },
-                        'verdict': {'type': 'string', 'enum': ['met', 'not_met', 'unclear']},
-                        'reasoning': {
-                            'type': 'string',
-                            'description': 'Why value_found does or does not satisfy this rule. If value_found is '
-                                            'null, say so plainly (e.g. "Not documented anywhere in the packet").',
-                        },
-                        'evidence_page': {'type': 'integer'},
-                    },
-                    'required': ['rule_id', 'value_found', 'verdict', 'reasoning'],
+                    'properties': {'topic': {'type': 'string'}, 'reasoning': {'type': 'string'}},
+                    'required': ['topic', 'reasoning'],
                 },
             },
             'missing_documents': {
@@ -181,23 +171,36 @@ CLASSIFICATION_TOOL = {
                     'required': ['doc_id', 'reason'],
                 },
             },
-            'flags_for_human_review': {
+            'rule_verdicts': {
                 'type': 'array',
-                'description': 'Case-by-case or judgment-call items (e.g. registered sex offender, '
-                                'immediately post-neurosurgery) that must never be auto-decided.',
+                'description': 'One entry per admission-criteria rule evaluated. Include every rule in '
+                                '`general` and `rules`, every FORM-X4/FORM-X5 check, and any applicable '
+                                '`by_system` entries — even ones where nothing was found (value_found null, '
+                                'verdict "unclear"). Keep value_found and reasoning to one short sentence each '
+                                '(a phrase is fine) so the full list fits the response budget.',
                 'items': {
                     'type': 'object',
-                    'properties': {'topic': {'type': 'string'}, 'reasoning': {'type': 'string'}},
-                    'required': ['topic', 'reasoning'],
+                    'properties': {
+                        'rule_id': {'type': 'string'},
+                        'value_found': {
+                            'type': ['string', 'null'],
+                            'description': 'One short phrase/sentence: the specific fact from the packet this '
+                                            'verdict is based on (e.g. "Ambulates 100+ ft with walker, modified '
+                                            'independence, p.8"). Null if nothing relevant was found.',
+                        },
+                        'verdict': {'type': 'string', 'enum': ['met', 'not_met', 'unclear']},
+                        'reasoning': {
+                            'type': 'string',
+                            'description': 'One short sentence: why value_found does or does not satisfy this '
+                                            'rule. If value_found is null, say so plainly and briefly.',
+                        },
+                        'evidence_page': {'type': 'integer'},
+                    },
+                    'required': ['rule_id', 'value_found', 'verdict', 'reasoning'],
                 },
             },
-            'overall_decision': {'type': 'string', 'enum': ['yes', 'no', 'maybe']},
-            'overall_reasoning': {
-                'type': 'string',
-                'description': 'A short paragraph a coordinator can read as-is, citing rule ids.',
-            },
         },
-        'required': ['rule_verdicts', 'missing_documents', 'flags_for_human_review', 'overall_decision', 'overall_reasoning'],
+        'required': ['overall_decision', 'overall_reasoning', 'flags_for_human_review', 'missing_documents', 'rule_verdicts'],
     },
 }
 
@@ -224,7 +227,9 @@ def classify_referral(extraction: dict[str, Any], criteria: dict[str, Any]) -> d
         "Compare documents_present against the checklist for missing_documents. overall_decision is "
         "\"no\" only when a must/exclude rule is clearly violated outside of a flagged case-by-case "
         "item; \"maybe\" when anything required is unclear, undocumented, or flagged for human review; "
-        "\"yes\" only when every must rule is met, no exclusion applies, and nothing is flagged. Call "
+        "\"yes\" only when every must rule is met, no exclusion applies, and nothing is flagged. There are "
+        "roughly 50 rules to cover, so keep every rule_verdicts entry brief (a short phrase for value_found, "
+        "one short sentence for reasoning) — the full list must fit in the response. Call "
         "record_classification once with your full reasoning.\n\n"
         f"ADMISSION CRITERIA JSON:\n{json.dumps(criteria)}\n\n"
         f"EXTRACTED FACTS:\n{json.dumps(extraction)}"
@@ -240,6 +245,11 @@ def classify_referral(extraction: dict[str, Any], criteria: dict[str, Any]) -> d
 
 
 def _tool_input(message: anthropic.types.Message, tool_name: str) -> dict[str, Any]:
+    if message.stop_reason == 'max_tokens':
+        raise RuntimeError(
+            f'Claude\'s {tool_name} response was cut off at the max_tokens limit before it finished, so it '
+            'cannot be used. Try again, or raise the relevant *_MAX_TOKENS constant in claude_client.py.'
+        )
     for block in message.content:
         if block.type == 'tool_use' and block.name == tool_name:
             return block.input

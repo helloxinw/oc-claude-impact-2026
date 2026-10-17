@@ -1,3 +1,4 @@
+from datetime import datetime, timezone
 from typing import Annotated
 
 from fastapi import APIRouter, Depends, HTTPException, status
@@ -6,7 +7,7 @@ from sqlalchemy.orm import Session
 
 from app.database import get_db
 from app.models import Referral
-from app.schemas import ReferralCreate, ReferralRead, ReferralStatusUpdate
+from app.schemas import ReferralCreate, ReferralDecisionUpdate, ReferralRead, ReferralStatusUpdate
 
 router = APIRouter(prefix='/api/referrals', tags=['referrals'])
 DbSession = Annotated[Session, Depends(get_db)]
@@ -40,6 +41,19 @@ def update_status(referral_id: str, payload: ReferralStatusUpdate, db: DbSession
     if referral is None:
         raise HTTPException(status_code=404, detail='Referral not found')
     referral.status = payload.status
+    db.commit()
+    db.refresh(referral)
+    return referral
+
+
+@router.patch('/{referral_id}/decision', response_model=ReferralRead)
+def update_coordinator_decision(referral_id: str, payload: ReferralDecisionUpdate, db: DbSession):
+    referral = db.get(Referral, referral_id)
+    if referral is None:
+        raise HTTPException(status_code=404, detail='Referral not found')
+    referral.coordinator_decision = payload.decision
+    referral.coordinator_decision_note = payload.note
+    referral.coordinator_decision_at = datetime.now(timezone.utc)
     db.commit()
     db.refresh(referral)
     return referral

@@ -10,7 +10,7 @@ from sqlalchemy.orm import Session
 from app.database import get_db
 from app.models import Document, Finding, Referral
 from app.pipeline import process_document
-from app.schemas import DocumentRead, FindingRead, FindingVerifyUpdate
+from app.schemas import DocumentRead, FindingRead, FindingReviewUpdate
 
 router = APIRouter(prefix='/api/referrals', tags=['documents'])
 findings_router = APIRouter(prefix='/api/findings', tags=['findings'])
@@ -85,11 +85,13 @@ def list_findings(referral_id: str, db: DbSession):
 
 
 @findings_router.patch('/{finding_id}', response_model=FindingRead)
-def verify_finding(finding_id: str, payload: FindingVerifyUpdate, db: DbSession):
+def review_finding(finding_id: str, payload: FindingReviewUpdate, db: DbSession):
     finding = db.get(Finding, finding_id)
     if finding is None:
         raise HTTPException(status_code=404, detail='Finding not found')
     finding.verified = payload.verified
+    finding.override_verdict = payload.override_verdict
+    finding.coordinator_note = payload.coordinator_note
     db.commit()
     db.refresh(finding)
     return finding

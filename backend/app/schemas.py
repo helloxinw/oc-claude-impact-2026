@@ -20,6 +20,11 @@ class ReferralStatusUpdate(BaseModel):
     status: ReferralStatus
 
 
+class ReferralDecisionUpdate(BaseModel):
+    decision: AiDecision
+    note: str = Field(default='', max_length=3000)
+
+
 class ReferralRead(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
@@ -32,6 +37,9 @@ class ReferralRead(BaseModel):
     ai_decision: AiDecision | None
     ai_decision_summary: str | None
     ai_processed_at: datetime | None
+    coordinator_decision: AiDecision | None
+    coordinator_decision_note: str | None
+    coordinator_decision_at: datetime | None
     document_status: DocumentStatus | None
     document_filename: str | None
     document_page_count: int | None
@@ -68,8 +76,12 @@ class FindingRead(BaseModel):
     verdict: FindingVerdict | None
     needs_verification: bool
     verified: bool
+    override_verdict: FindingVerdict | None
+    coordinator_note: str | None
     created_at: datetime
 
 
-class FindingVerifyUpdate(BaseModel):
+class FindingReviewUpdate(BaseModel):
     verified: bool
+    override_verdict: FindingVerdict | None = None
+    coordinator_note: str = Field(default='', max_length=3000)

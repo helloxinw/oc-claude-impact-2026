@@ -14,6 +14,9 @@ export interface Referral {
   ai_decision: AiDecision | null
   ai_decision_summary: string | null
   ai_processed_at: string | null
+  coordinator_decision: AiDecision | null
+  coordinator_decision_note: string | null
+  coordinator_decision_at: string | null
   document_status: DocumentStatus | null
   document_filename: string | null
   document_page_count: number | null
@@ -48,5 +51,7 @@ export interface Finding {
   verdict: FindingVerdict | null
   needs_verification: boolean
   verified: boolean
+  override_verdict: FindingVerdict | null
+  coordinator_note: string | null
   created_at: string
 }

@@ -25,6 +25,11 @@ class Referral(Base):
     ai_decision: Mapped[str | None] = mapped_column(String(10), nullable=True)
     ai_decision_summary: Mapped[str | None] = mapped_column(Text, nullable=True)
     ai_processed_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    # The coordinator's own final call, recorded separately from the AI draft above. Never set
+    # automatically; the workflow `status` field still drives the operational queue.
+    coordinator_decision: Mapped[str | None] = mapped_column(String(10), nullable=True)
+    coordinator_decision_note: Mapped[str | None] = mapped_column(Text, nullable=True)
+    coordinator_decision_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
     # Denormalized snapshot of the most recently uploaded document, so the queue list can show
     # packet status without an N+1 query per row. Mirrors Document.status/page_count/filename.
     document_status: Mapped[str | None] = mapped_column(String(32), nullable=True)
@@ -78,6 +83,10 @@ class Finding(Base):
     verdict: Mapped[str | None] = mapped_column(String(20), nullable=True)
     needs_verification: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True)
     verified: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)
+    # The coordinator's own verdict for this rule, when it differs from (or confirms past) the AI's
+    # `verdict` above. `verdict` is never overwritten, so the AI's original read stays auditable.
+    override_verdict: Mapped[str | None] = mapped_column(String(20), nullable=True)
+    coordinator_note: Mapped[str | None] = mapped_column(Text, nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utc_now, nullable=False)
 
     document: Mapped['Document'] = relationship(back_populates='findings')
