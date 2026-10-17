@@ -1,6 +1,6 @@
-import { useEffect, useMemo, useState, type ChangeEvent, type FormEvent } from 'react'
+import { useEffect, useMemo, useRef, useState, type ChangeEvent, type FormEvent } from 'react'
 import { Link } from 'react-router-dom'
-import { AlertCircle, CheckCircle2, ChevronRight, ClipboardList, Clock3, FileText, Filter, LayoutDashboard, LoaderCircle, Paperclip, Plus, Search, ShieldCheck, X } from 'lucide-react'
+import { AlertCircle, CheckCircle2, ChevronRight, ChevronsUpDown, ClipboardList, Clock3, FileText, Filter, LayoutDashboard, LoaderCircle, LogOut, Paperclip, Plus, Search, Settings, X } from 'lucide-react'
 import { api } from '@/api'
 import logo from '@/assets/logo.png'
 import type { NewReferral, Referral, ReferralStatus } from '@/types'
@@ -72,17 +72,15 @@ export function QueuePage() {
   }
 
   return <div className="min-h-screen bg-background lg:flex">
-    <aside className="hidden w-[234px] shrink-0 flex-col border-r bg-white px-4 py-6 lg:flex">
+    <aside className="hidden w-[234px] shrink-0 flex-col border-r bg-white px-4 py-6 lg:sticky lg:top-0 lg:flex lg:h-screen lg:overflow-y-auto">
       <div className="flex items-center gap-2.5 px-2">
         <img src={logo} alt="" className="h-7 w-auto"/>
         <div className="text-[17px] font-semibold tracking-tight">Referral<span className="text-primary">Flow</span></div>
       </div>
       <p className="mb-3 mt-12 px-3 text-[10px] font-bold uppercase tracking-[0.14em] text-muted-foreground">Workspace</p>
       <div className="flex items-center gap-2 rounded-lg bg-primary/10 px-3 py-2.5 text-sm font-semibold text-primary"><LayoutDashboard className="size-4"/>Referral intake</div>
-      <div className="mt-2 flex items-center gap-2 rounded-lg px-3 py-2.5 text-sm text-muted-foreground"><ClipboardList className="size-4"/>Coordinator overview</div>
-      <div className="mt-auto rounded-lg border bg-muted/50 p-3">
-        <div className="mb-1 flex items-center gap-2 text-xs font-semibold"><ShieldCheck className="size-4 text-primary"/>Demo environment</div>
-        <p className="text-[11px] leading-5 text-muted-foreground">Synthetic referrals only. Not approved for patient information.</p>
+      <div className="mt-auto">
+        <ProfileMenu/>
       </div>
     </aside>
 
@@ -168,4 +166,43 @@ export function QueuePage() {
       </DialogContent>
     </Dialog>
   </div>
+}
+
+// Placeholder only — this prototype has no real authentication.
+function ProfileMenu() {
+  const [open, setOpen] = useState(false)
+  const ref = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    if (!open) return
+    function handleClick(e: MouseEvent) {
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false)
+    }
+    document.addEventListener('mousedown', handleClick)
+    return () => document.removeEventListener('mousedown', handleClick)
+  }, [open])
+
+  return (
+    <div ref={ref} className="relative mt-3">
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        className="flex w-full items-center gap-2.5 rounded-lg px-2 py-2 text-left hover:bg-muted/60"
+      >
+        <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-primary/10 text-sm font-semibold text-primary">A</span>
+        <span className="min-w-0 flex-1">
+          <span className="block truncate text-sm font-semibold">Hi, Alice</span>
+          <span className="block truncate text-xs text-muted-foreground">Care Coordinator</span>
+        </span>
+        <ChevronsUpDown className="size-3.5 shrink-0 text-muted-foreground"/>
+      </button>
+      {open && (
+        <div className="absolute inset-x-0 bottom-full z-20 mb-1.5 overflow-hidden rounded-lg border bg-white py-1 shadow-lg">
+          <div className="border-b px-3 py-2 text-xs text-muted-foreground">Signed in as <span className="font-medium text-foreground">alice@illuminationhh.org</span></div>
+          <button type="button" onClick={() => setOpen(false)} className="flex w-full items-center gap-2 px-3 py-2 text-left text-sm hover:bg-muted/60"><Settings className="size-4 text-muted-foreground"/>Settings</button>
+          <button type="button" onClick={() => setOpen(false)} className="flex w-full items-center gap-2 px-3 py-2 text-left text-sm text-red-700 hover:bg-red-50"><LogOut className="size-4"/>Sign out</button>
+        </div>
+      )}
+    </div>
+  )
 }
