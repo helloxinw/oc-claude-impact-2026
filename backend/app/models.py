@@ -69,7 +69,8 @@ class Finding(Base):
     referral_id: Mapped[str] = mapped_column(String(36), ForeignKey('referrals.id'), nullable=False, index=True)
     # 'extraction' (a fact read off the packet), 'eligibility_rule' (a verdict against one IHH
     # admission-criteria rule), 'missing_document' (a checklist item not found in the packet), or
-    # 'decision' (the single overall yes/no/maybe finding plus its reasoning).
+    # 'decision' (the single overall yes/no/maybe finding plus its reasoning, human-review flags, and the
+    # condition groups the patient was screened for).
     category: Mapped[str] = mapped_column(String(32), nullable=False, index=True)
     key: Mapped[str] = mapped_column(String(160), nullable=False)
     value: Mapped[str] = mapped_column(Text, nullable=False)
@@ -79,7 +80,10 @@ class Finding(Base):
     # Admission-criteria rule id this finding is about, e.g. 'MOB-3' (see backend/app/data/admission_criteria.json).
     rule_id: Mapped[str | None] = mapped_column(String(20), nullable=True)
     source_page: Mapped[int | None] = mapped_column(Integer, nullable=True)
-    # 'met' | 'not_met' | 'unclear' | 'present' | 'present_unclear' | 'missing', depending on category.
+    # For category='eligibility_rule': 'met' | 'not_met' | 'unclear' | 'not_applicable' (the rule's own
+    # trigger doesn't hold for this patient) | 'pending_arrangement' (a conditional rule's trigger is
+    # present but its arrangement isn't confirmed yet), or 'answered' | 'unanswered' for `ask` questions,
+    # which are never pass/fail. For checklist documents: 'present' | 'present_unclear' | 'missing'.
     # 'present_unclear': the checklist document is in the packet but its key content is redacted/illegible
     # (different from 'missing', where the document was never sent). Null for free-text findings.
     verdict: Mapped[str | None] = mapped_column(String(20), nullable=True)

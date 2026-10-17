@@ -7,7 +7,10 @@ ReferralStatus = Literal['new', 'needs_info', 'ready_for_review', 'accepted', 'c
 AiDecision = Literal['yes', 'no', 'maybe']
 DocumentStatus = Literal['uploaded', 'processing', 'processed', 'failed']
 FindingCategory = Literal['extraction', 'eligibility_rule', 'missing_document', 'decision']
-FindingVerdict = Literal['met', 'not_met', 'unclear', 'present', 'present_unclear', 'missing']
+FindingVerdict = Literal[
+    'met', 'not_met', 'unclear', 'not_applicable', 'pending_arrangement', 'answered', 'unanswered',
+    'present', 'present_unclear', 'missing',
+]
 
 
 class ReferralCreate(BaseModel):

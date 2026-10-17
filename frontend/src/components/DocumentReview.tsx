@@ -22,9 +22,21 @@ const verdictStyles: Record<string, string> = {
   met: 'border-emerald-200 bg-emerald-50 text-emerald-700',
   not_met: 'border-red-200 bg-red-50 text-red-700',
   unclear: 'border-amber-200 bg-amber-50 text-amber-700',
+  pending_arrangement: 'border-sky-200 bg-sky-50 text-sky-700',
+  not_applicable: 'border-slate-200 bg-slate-50 text-slate-500',
+  answered: 'border-indigo-200 bg-indigo-50 text-indigo-700',
+  unanswered: 'border-dashed border-slate-300 bg-white text-slate-600',
 }
-const verdictLabels: Record<string, string> = { met: 'Met', not_met: 'Not met', unclear: 'Unclear' }
-const verdictOrder: Record<string, number> = { not_met: 0, unclear: 1, met: 2 }
+const verdictLabels: Record<string, string> = {
+  met: 'Met', not_met: 'Not met', unclear: 'Unclear', pending_arrangement: 'Arrangement pending',
+  not_applicable: 'N/A', answered: 'Answered', unanswered: 'Not answered',
+}
+const verdictOrder: Record<string, number> = {
+  not_met: 0, pending_arrangement: 1, unclear: 2, unanswered: 3, met: 4, answered: 5, not_applicable: 6,
+}
+const ruleVerdictOptions = ['met', 'not_met', 'unclear', 'not_applicable'] as const satisfies readonly FindingVerdict[]
+const questionVerdictOptions = ['answered', 'unanswered'] as const satisfies readonly FindingVerdict[]
+const isQuestion = (f: Finding) => f.verdict === 'answered' || f.verdict === 'unanswered'
 const checklistStyles: Record<string, string> = {
   present: 'border-emerald-200 bg-emerald-50 text-emerald-700',
   present_unclear: 'border-amber-200 bg-amber-50 text-amber-700',
@@ -88,9 +100,12 @@ export function DocumentReview({ referral, onReferralUpdated }: { referral: Refe
   const fields = findings.filter((f) => f.category === 'extraction' && f.key !== 'patient_summary' && !f.key.startsWith('document:'))
   const checklist = findings.filter((f) => f.key.startsWith('document:'))
   const ruleFindings = [...findings.filter((f) => f.category === 'eligibility_rule')]
-    .sort((a, b) => (verdictOrder[a.verdict ?? 'met'] ?? 2) - (verdictOrder[b.verdict ?? 'met'] ?? 2))
+    .sort((a, b) => (verdictOrder[a.verdict ?? 'met'] ?? 4) - (verdictOrder[b.verdict ?? 'met'] ?? 4))
   const flagFindings = findings.filter((f) => f.category === 'decision' && f.key.startsWith('flag:'))
-  const reviewedCount = ruleFindings.filter((f) => f.verified).length
+  const conditionFindings = findings.filter((f) => f.category === 'decision' && f.key.startsWith('condition:'))
+  // Rules that don't apply to this patient don't need a coordinator's review.
+  const reviewableRules = ruleFindings.filter((f) => f.verdict !== 'not_applicable')
+  const reviewedCount = reviewableRules.filter((f) => f.verified).length
   const ruleGroups = groupByCategory(ruleFindings)
 
   const activeFinding = findings.find((f) => f.id === activeFindingId) ?? null
@@ -157,7 +172,7 @@ export function DocumentReview({ referral, onReferralUpdated }: { referral: Refe
 
             <Tabs defaultValue="eligibility">
               <TabsList className="sticky top-0 z-10">
-                <TabsTrigger value="eligibility">Criteria ({reviewedCount}/{ruleFindings.length} reviewed)</TabsTrigger>
+                <TabsTrigger value="eligibility">Criteria ({reviewedCount}/{reviewableRules.length} reviewed)</TabsTrigger>
                 <TabsTrigger value="facts">Extracted facts ({fields.length})</TabsTrigger>
                 <TabsTrigger value="checklist">Checklist ({checklist.length})</TabsTrigger>
               </TabsList>
@@ -168,6 +183,12 @@ export function DocumentReview({ referral, onReferralUpdated }: { referral: Refe
                     <p className="mb-1 text-[11px] font-semibold uppercase tracking-widest text-muted-foreground">Summary</p>
                     <p className="text-xs leading-5">{patientSummary.value}</p>
                   </div>
+                )}
+                {conditionFindings.length > 0 && (
+                  <p className="mb-3 text-xs leading-5 text-muted-foreground">
+                    <span className="font-medium text-foreground">Diagnosis-specific criteria checked for:</span>{' '}
+                    {conditionFindings.map((f) => `${f.key.replace('condition:', '')} (${f.value})`).join('; ')}
+                  </p>
                 )}
                 {ruleGroups.map(({ category, items }) => (
                   <div key={category}>
@@ -348,6 +369,11 @@ function RuleRow({ finding, active, onClick, onReviewed }: { finding: Finding; a
   const effectiveVerdict = finding.override_verdict ?? finding.verdict
   const style = effectiveVerdict ? verdictStyles[effectiveVerdict] : ''
   const overridden = Boolean(finding.override_verdict && finding.override_verdict !== finding.verdict)
+  const question = isQuestion(finding)
+  // "Arrangement pending" is only offered back on rules the AI read as conditional-and-pending.
+  const verdictOptions: readonly FindingVerdict[] = question
+    ? questionVerdictOptions
+    : finding.verdict === 'pending_arrangement' ? [...ruleVerdictOptions, 'pending_arrangement'] : ruleVerdictOptions
 
   async function handleSave() {
     setSaving(true)
@@ -364,7 +390,7 @@ function RuleRow({ finding, active, onClick, onReviewed }: { finding: Finding; a
   }
 
   return (
-    <div className={`rounded-lg border transition-colors ${active ? 'border-primary/40 bg-primary/5 ring-1 ring-primary/30' : ''}`}>
+    <div className={`rounded-lg border transition-colors ${active ? 'border-primary/40 bg-primary/5 ring-1 ring-primary/30' : ''} ${effectiveVerdict === 'not_applicable' && !active ? 'opacity-70' : ''}`}>
       <div onClick={clickable ? onClick : undefined} className={clickable ? 'cursor-pointer p-2.5' : 'p-2.5'}>
         <div className="flex items-center gap-2">
           <Badge variant="outline" className={`shrink-0 text-[10px] ${style}`}>{effectiveVerdict ? verdictLabels[effectiveVerdict] : 'N/A'}</Badge>
@@ -373,10 +399,11 @@ function RuleRow({ finding, active, onClick, onReviewed }: { finding: Finding; a
           {finding.source_page && <span className="text-xs font-normal text-muted-foreground">p.{finding.source_page}</span>}
           {finding.verified && <CheckCircle2 className="ml-auto size-3.5 shrink-0 text-emerald-600" />}
         </div>
+        {question && <p className="mt-1 text-xs leading-5 text-muted-foreground">{finding.value}</p>}
         <p className="mt-1 text-xs leading-5">
           {finding.evidence ? <span className="font-medium">{finding.evidence}</span> : <span className="italic text-muted-foreground">Not found in packet</span>}
         </p>
-        <p className="mt-0.5 text-xs leading-5 text-muted-foreground">{finding.value}</p>
+        {!question && <p className="mt-0.5 text-xs leading-5 text-muted-foreground">{finding.value}</p>}
         {finding.coordinator_note && (
           <p className="mt-1.5 rounded bg-violet-50 px-2 py-1 text-xs leading-5 text-violet-900"><b>Coordinator:</b> {finding.coordinator_note}</p>
         )}
@@ -388,8 +415,8 @@ function RuleRow({ finding, active, onClick, onReviewed }: { finding: Finding; a
         {expanded && (
           <div className="mt-2 space-y-2">
             <div className="flex flex-wrap items-center gap-1.5">
-              <span className="text-[11px] text-muted-foreground">Your verdict:</span>
-              {(['met', 'not_met', 'unclear'] as const).map((v) => {
+              <span className="text-[11px] text-muted-foreground">{question ? 'Your answer status:' : 'Your verdict:'}</span>
+              {verdictOptions.map((v) => {
                 const isActive = (overrideDraft ?? finding.verdict) === v
                 return (
                   <button
