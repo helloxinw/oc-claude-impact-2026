@@ -78,6 +78,10 @@ class FindingRead(BaseModel):
     verified: bool
     override_verdict: FindingVerdict | None
     coordinator_note: str | None
+    bbox_x0: float | None
+    bbox_y0: float | None
+    bbox_x1: float | None
+    bbox_y1: float | None
     created_at: datetime
 
 

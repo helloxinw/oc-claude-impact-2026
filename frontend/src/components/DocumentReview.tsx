@@ -1,10 +1,11 @@
 import { useEffect, useState, type ChangeEvent } from 'react'
 import { AlertTriangle, Check, CheckCircle2, ChevronDown, CircleHelp, FileWarning, Loader2, ShieldAlert, Upload, XCircle } from 'lucide-react'
 import { api } from '@/api'
+import { groupByCategory } from '@/lib/ruleCategory'
 import type { AiDecision, Finding, FindingVerdict, Referral, ReferralDocument } from '@/types'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { PdfViewer } from '@/components/PdfViewer'
+import { type HighlightBox, PdfViewer } from '@/components/PdfViewer'
 import { Progress } from '@/components/ui/progress'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
@@ -84,6 +85,12 @@ export function DocumentReview({ referral, onReferralUpdated }: { referral: Refe
     .sort((a, b) => (verdictOrder[a.verdict ?? 'met'] ?? 2) - (verdictOrder[b.verdict ?? 'met'] ?? 2))
   const flagFindings = findings.filter((f) => f.category === 'decision' && f.key.startsWith('flag:'))
   const reviewedCount = ruleFindings.filter((f) => f.verified).length
+  const ruleGroups = groupByCategory(ruleFindings)
+
+  const activeFinding = findings.find((f) => f.id === activeFindingId) ?? null
+  const highlightBox: HighlightBox | null = activeFinding?.source_page && activeFinding.bbox_x0 != null
+    ? { page: activeFinding.source_page, x0: activeFinding.bbox_x0, y0: activeFinding.bbox_y0!, x1: activeFinding.bbox_x1!, y1: activeFinding.bbox_y1! }
+    : null
 
   function jumpToFinding(finding: Finding) {
     if (!finding.source_page) return
@@ -156,8 +163,15 @@ export function DocumentReview({ referral, onReferralUpdated }: { referral: Refe
                     <p className="text-xs leading-5">{patientSummary.value}</p>
                   </div>
                 )}
-                {ruleFindings.map((f) => (
-                  <RuleRow key={f.id} finding={f} active={f.id === activeFindingId} onClick={() => jumpToFinding(f)} onReviewed={updateFinding} />
+                {ruleGroups.map(({ category, items }) => (
+                  <div key={category}>
+                    <p className="mb-1.5 mt-3 text-[11px] font-semibold uppercase tracking-widest text-muted-foreground first:mt-0">{category}</p>
+                    <div className="space-y-2">
+                      {items.map((f) => (
+                        <RuleRow key={f.id} finding={f} active={f.id === activeFindingId} onClick={() => jumpToFinding(f)} onReviewed={updateFinding} />
+                      ))}
+                    </div>
+                  </div>
                 ))}
                 {ruleFindings.length === 0 && <p className="text-xs text-muted-foreground">No criteria evaluated.</p>}
               </TabsContent>
@@ -195,8 +209,9 @@ export function DocumentReview({ referral, onReferralUpdated }: { referral: Refe
               filename={latestDocument.filename}
               activePage={activePage}
               jumpSignal={jumpSignal}
+              highlightBox={highlightBox}
             />
-            <p className="mt-1.5 text-[11px] text-muted-foreground">Tip: click any extracted fact or criterion on the left to scroll straight to the page it came from, or jump to a page directly above. Packets opened in a new tab also carry real bookmarks in your browser's PDF outline panel.</p>
+            <p className="mt-1.5 text-[11px] text-muted-foreground">Tip: click any extracted fact or criterion on the left to scroll straight to the page it came from and highlight the exact text, when we could find it. Packets opened in a new tab also carry real bookmarks in your browser's PDF outline panel.</p>
           </div>
         </div>
       )}

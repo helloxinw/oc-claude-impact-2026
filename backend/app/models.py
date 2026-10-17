@@ -1,7 +1,7 @@
 from datetime import datetime, timezone
 from uuid import uuid4
 
-from sqlalchemy import Boolean, DateTime, ForeignKey, Integer, String, Text
+from sqlalchemy import Boolean, DateTime, Float, ForeignKey, Integer, String, Text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.database import Base
@@ -87,6 +87,13 @@ class Finding(Base):
     # `verdict` above. `verdict` is never overwritten, so the AI's original read stays auditable.
     override_verdict: Mapped[str | None] = mapped_column(String(20), nullable=True)
     coordinator_note: Mapped[str | None] = mapped_column(Text, nullable=True)
+    # Where on source_page this was found, as a fraction (0-1) of the page image, so the frontend can
+    # draw a highlight box over the exact text rather than just scrolling to the page. Null when no
+    # verbatim OCR quote could be matched back to a line on the page.
+    bbox_x0: Mapped[float | None] = mapped_column(Float, nullable=True)
+    bbox_y0: Mapped[float | None] = mapped_column(Float, nullable=True)
+    bbox_x1: Mapped[float | None] = mapped_column(Float, nullable=True)
+    bbox_y1: Mapped[float | None] = mapped_column(Float, nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utc_now, nullable=False)
 
     document: Mapped['Document'] = relationship(back_populates='findings')

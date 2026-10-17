@@ -88,6 +88,14 @@ EXTRACTION_TOOL = {
                         'value': {'type': 'string'},
                         'source_page': {'type': 'integer', 'description': 'Page number this was read from.'},
                         'confidence': {'type': 'string', 'enum': ['high', 'low']},
+                        'quote': {
+                            'type': ['string', 'null'],
+                            'description': 'A short run of words (3-12) copied VERBATIM from the OCR text on '
+                                            'source_page that this fact was read from — exactly as it '
+                                            'appears there, garbled OCR and all, not paraphrased. Used to locate '
+                                            'and highlight it on the page image. Null if there is no single '
+                                            'supporting snippet (e.g. a fact inferred from absence of a field).',
+                        },
                     },
                     'required': ['key', 'value', 'confidence'],
                 },
@@ -173,11 +181,17 @@ CLASSIFICATION_TOOL = {
             },
             'rule_verdicts': {
                 'type': 'array',
-                'description': 'One entry per admission-criteria rule evaluated. Include every rule in '
-                                '`general` and `rules`, every FORM-X4/FORM-X5 check, and any applicable '
-                                '`by_system` entries — even ones where nothing was found (value_found null, '
-                                'verdict "unclear"). Keep value_found and reasoning to one short sentence each '
-                                '(a phrase is fine) so the full list fits the response budget.',
+                'description': 'One entry per admission-criteria rule evaluated. Always-applicable rules '
+                                '(every rule in `general`; every `rules` entry whose section is ADLs, Mobility, '
+                                'Mental Health, Cognition, Other Factors, End of life care, or Infection Control; '
+                                'FORM-X4; FORM-X5) must each get an entry even where nothing was found '
+                                '(value_found null, verdict "unclear"). Diagnosis-specific rules (the `rules` '
+                                'entries under Diabetes, Infection, Respiratory Illness, Cardiac, and every '
+                                '`by_system` entry) get an entry ONLY if that condition/body system is actually '
+                                'present in this patient’s diagnoses — skip them entirely otherwise, do '
+                                'not pad the list with verdicts for conditions the patient doesn’t have. '
+                                'Keep value_found and reasoning to one short sentence each (a phrase is fine) so '
+                                'the full list fits the response budget.',
                 'items': {
                     'type': 'object',
                     'properties': {
@@ -195,6 +209,13 @@ CLASSIFICATION_TOOL = {
                                             'rule. If value_found is null, say so plainly and briefly.',
                         },
                         'evidence_page': {'type': 'integer'},
+                        'quote': {
+                            'type': ['string', 'null'],
+                            'description': 'A short run of words (3-12) copied VERBATIM from the OCR text on '
+                                            'evidence_page that this verdict is based on — exactly as it '
+                                            'appears there, garbled OCR and all, not paraphrased. Used to locate '
+                                            'and highlight it on the page image. Null if value_found is null.',
+                        },
                     },
                     'required': ['rule_id', 'value_found', 'verdict', 'reasoning'],
                 },
@@ -220,10 +241,18 @@ def classify_referral(extraction: dict[str, Any], criteria: dict[str, Any]) -> d
         "satisfies mobility; tuberculosis and refusal of detox are exclusions from the referral form "
         "(FORM-X4, FORM-X5) even though this outline is silent on them — evaluate those two as "
         "ordinary exclude-type rule_verdicts alongside everything else.\n\n"
-        "rule_verdicts must cover every rule in `general` and `rules`, FORM-X4 and FORM-X5, plus any "
-        "applicable eligible/ineligible entries under `by_system` for the diagnoses mentioned — "
-        "including rules where nothing relevant was found (value_found null, verdict \"unclear\", "
-        "reasoning explains it wasn't documented). Never guess a fact that isn't in the extracted data. "
+        "rule_verdicts must cover every rule in `general`, every `rules` entry whose section is ADLs, "
+        "Mobility, Mental Health, Cognition, Other Factors, End of life care, or Infection Control, plus "
+        "FORM-X4 and FORM-X5 — these apply to every patient regardless of diagnosis, so include all of "
+        "them even where nothing relevant was found (value_found null, verdict \"unclear\", reasoning "
+        "explains it wasn't documented). Separately, identify this patient's diagnosed condition(s) from "
+        "the extracted facts, and evaluate the Diabetes/Infection/Respiratory Illness/Cardiac rules "
+        "within `rules`, and the eligible/ineligible entries under `by_system`, ONLY for the body "
+        "system(s)/condition(s) this patient actually has — e.g. do not evaluate any Respiratory Illness "
+        "or Respiratory by_system rule unless the patient has a respiratory diagnosis. Leave rule_verdicts "
+        "entirely out for every disease-specific rule that doesn't relate to a condition this patient has; "
+        "do not mark them \"unclear\" or \"not_met\" just to cover the list. Never guess a fact that isn't "
+        "in the extracted data. "
         "Compare documents_present against the checklist for missing_documents. overall_decision is "
         "\"no\" only when a must/exclude rule is clearly violated outside of a flagged case-by-case "
         "item; \"maybe\" when anything required is unclear, undocumented, or flagged for human review; "

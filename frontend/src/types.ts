@@ -53,5 +53,9 @@ export interface Finding {
   verified: boolean
   override_verdict: FindingVerdict | null
   coordinator_note: string | null
+  bbox_x0: number | null
+  bbox_y0: number | null
+  bbox_x1: number | null
+  bbox_y1: number | null
   created_at: string
 }

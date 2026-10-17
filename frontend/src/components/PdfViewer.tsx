@@ -11,16 +11,26 @@ pdfjs.GlobalWorkerOptions.workerSrc = new URL('pdfjs-dist/build/pdf.worker.min.m
  * on an iframe's #page= hash, which Chrome's built-in viewer does not reliably re-navigate to
  * on an already-mounted iframe.
  */
+export interface HighlightBox {
+  page: number
+  x0: number
+  y0: number
+  x1: number
+  y1: number
+}
+
 export function PdfViewer({
   fileUrl,
   filename,
   activePage,
   jumpSignal,
+  highlightBox,
 }: {
   fileUrl: string
   filename: string
   activePage: number | null
   jumpSignal: number
+  highlightBox?: HighlightBox | null
 }) {
   const viewerRef = useRef<HTMLDivElement>(null)
   const pageRefs = useRef<(HTMLDivElement | null)[]>([])
@@ -122,7 +132,7 @@ export function PdfViewer({
               ref={(el) => { pageRefs.current[i] = el }}
               data-highlight={highlightPage === i + 1}
               style={{ minHeight: pageWidth * (pageRatios[i + 1] ?? 11 / 8.5) }}
-              className="mx-auto mb-4 w-fit bg-white shadow-sm ring-primary transition-shadow data-[highlight=true]:ring-4"
+              className="relative mx-auto mb-4 w-fit bg-white shadow-sm ring-primary transition-shadow data-[highlight=true]:ring-4"
             >
               <Page
                 pageNumber={i + 1}
@@ -131,6 +141,17 @@ export function PdfViewer({
                 renderAnnotationLayer={false}
                 onLoadSuccess={(page) => setPageRatios((r) => ({ ...r, [page.pageNumber]: page.originalHeight / page.originalWidth }))}
               />
+              {highlightBox && highlightBox.page === i + 1 && (
+                <div
+                  className="pointer-events-none absolute rounded-sm bg-yellow-300/40 ring-2 ring-yellow-500/80"
+                  style={{
+                    left: `${highlightBox.x0 * 100}%`,
+                    top: `${highlightBox.y0 * 100}%`,
+                    width: `${Math.max((highlightBox.x1 - highlightBox.x0) * 100, 0.5)}%`,
+                    height: `${Math.max((highlightBox.y1 - highlightBox.y0) * 100, 0.5)}%`,
+                  }}
+                />
+              )}
             </div>
           ))}
         </Document>

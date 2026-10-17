@@ -23,10 +23,17 @@ if shutil.which('tesseract') is None:
 
 
 @dataclass
+class OcrLine:
+    text: str
+    bbox: tuple[float, float, float, float]  # (x0, y0, x1, y1), each 0-1 as a fraction of the page image
+
+
+@dataclass
 class PageContent:
     page_number: int  # 1-indexed
     text: str
     mean_confidence: float | None  # Tesseract's average per-word confidence (0-100); None if no words found
+    lines: list[OcrLine]  # Empty for pages OCR didn't run on (e.g. the pypdf text-layer fallback)
 
 
 class PdfExtractionError(ValueError):
@@ -44,14 +51,18 @@ def _largest_image(page) -> Image.Image | None:
     return best.image
 
 
-def _ocr_page(image: Image.Image) -> tuple[str, float | None]:
-    """Runs Tesseract once and reconstructs line-grouped text plus a mean word confidence,
-    instead of calling image_to_string and image_to_data separately."""
+def _ocr_page(image: Image.Image) -> tuple[str, float | None, list[OcrLine]]:
+    """Runs Tesseract once and reconstructs line-grouped text, a mean word confidence, and each
+    line's bounding box (normalized to the image size), instead of calling image_to_string and
+    image_to_data separately. The bounding boxes let the frontend highlight exactly where an
+    extracted fact came from, rather than just the page it's on."""
     if image.mode not in ('RGB', 'L'):
         image = image.convert('L')
     data = pytesseract.image_to_data(image, output_type=pytesseract.Output.DICT)
+    width, height = image.size
 
-    lines: dict[tuple[int, int, int], list[str]] = {}
+    words_by_line: dict[tuple[int, int, int], list[str]] = {}
+    boxes_by_line: dict[tuple[int, int, int], list[tuple[int, int, int, int]]] = {}
     confidences: list[int] = []
     for i, word in enumerate(data['text']):
         if not word.strip():
@@ -60,11 +71,24 @@ def _ocr_page(image: Image.Image) -> tuple[str, float | None]:
         if conf >= 0:
             confidences.append(conf)
         key = (data['block_num'][i], data['par_num'][i], data['line_num'][i])
-        lines.setdefault(key, []).append(word)
+        words_by_line.setdefault(key, []).append(word)
+        left, top, w, h = data['left'][i], data['top'][i], data['width'][i], data['height'][i]
+        boxes_by_line.setdefault(key, []).append((left, top, left + w, top + h))
 
-    text = '\n'.join(' '.join(words) for words in lines.values())
+    text = '\n'.join(' '.join(words) for words in words_by_line.values())
     mean_confidence = sum(confidences) / len(confidences) if confidences else None
-    return text, mean_confidence
+
+    lines: list[OcrLine] = []
+    if width and height:
+        for key, words in words_by_line.items():
+            word_boxes = boxes_by_line[key]
+            x0 = min(b[0] for b in word_boxes) / width
+            y0 = min(b[1] for b in word_boxes) / height
+            x1 = max(b[2] for b in word_boxes) / width
+            y1 = max(b[3] for b in word_boxes) / height
+            lines.append(OcrLine(text=' '.join(words), bbox=(x0, y0, x1, y1)))
+
+    return text, mean_confidence, lines
 
 
 def extract_pages(file_bytes: bytes, *, max_pages: int = 60) -> list[PageContent]:
@@ -88,15 +112,16 @@ def extract_pages(file_bytes: bytes, *, max_pages: int = 60) -> list[PageContent
         page_number = index + 1
         text = ''
         confidence: float | None = None
+        lines: list[OcrLine] = []
         try:
             page = reader.pages[index]
             image = _largest_image(page)
             if image is not None:
-                text, confidence = _ocr_page(image)
+                text, confidence, lines = _ocr_page(image)
             if not text:
                 # No embedded image (or OCR found nothing) \u2014 fall back to any text layer the PDF has.
                 text = (page.extract_text() or '').strip()
         except Exception as exc:
             text = f'[Page {page_number} could not be read: {exc}]'
-        pages.append(PageContent(page_number=page_number, text=text, mean_confidence=confidence))
+        pages.append(PageContent(page_number=page_number, text=text, mean_confidence=confidence, lines=lines))
     return pages
