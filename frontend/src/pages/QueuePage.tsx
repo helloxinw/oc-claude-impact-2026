@@ -139,7 +139,7 @@ export function QueuePage() {
       <DialogContent>
         <DialogHeader><DialogTitle>New referral</DialogTitle><DialogDescription>Create a referral and, optionally, attach its packet now so extraction starts right away. Do not enter real patient information.</DialogDescription></DialogHeader>
         <form className="mt-5 space-y-4" onSubmit={createReferral}>
-          <div className="space-y-2"><Label htmlFor="patient-alias">Patient Name</Label><Input id="patient-alias" required minLength={2} maxLength={80} value={newReferral.patient_alias} onChange={(e) => setNewReferral((p) => ({ ...p, patient_alias: e.target.value }))} placeholder="Demo patient D"/></div>
+          <div className="space-y-2"><Label htmlFor="patient-alias">Patient Name</Label><Input id="patient-alias" required minLength={2} maxLength={80} value={newReferral.patient_alias} onChange={(e) => setNewReferral((p) => ({ ...p, patient_alias: e.target.value }))} placeholder="Patient A"/></div>
           <div className="space-y-2"><Label htmlFor="hospital">Hospital</Label><Input id="hospital" required minLength={2} maxLength={120} value={newReferral.hospital_name} onChange={(e) => setNewReferral((p) => ({ ...p, hospital_name: e.target.value }))} placeholder="Example Hospital"/></div>
           <div className="space-y-2"><Label htmlFor="reason">Reason for referral</Label><Textarea id="reason" required minLength={2} maxLength={3000} rows={3} value={newReferral.reason} onChange={(e) => setNewReferral((p) => ({ ...p, reason: e.target.value }))} placeholder="Recovery needs and outstanding documentation..."/></div>
           <div className="space-y-2">

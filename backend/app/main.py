@@ -18,13 +18,13 @@ async def lifespan(app: FastAPI):
         with SessionLocal() as db:
             if db.scalar(select(Referral.id).limit(1)) is None:
                 db.add_all([
-                    Referral(patient_alias='Demo patient A', hospital_name='Example General Hospital',
+                    Referral(patient_alias='Patient A', hospital_name='Example General Hospital',
                              reason='Recovery after wound treatment; mobility documentation needs clarification.',
                              status='needs_info', notes='Synthetic data only. Awaiting recent vitals and PT notes.'),
-                    Referral(patient_alias='Demo patient B', hospital_name='Example Community Hospital',
+                    Referral(patient_alias='Patient B', hospital_name='Example Community Hospital',
                              reason='Medication management during recovery; packet ready for human review.',
                              status='ready_for_review', notes='Synthetic data only. No eligibility decision made.'),
-                    Referral(patient_alias='Demo patient C', hospital_name='Example Medical Center',
+                    Referral(patient_alias='Patient C', hospital_name='Example Medical Center',
                              reason='Post-discharge care and housing support; intake newly submitted.',
                              status='new', notes='Synthetic data only.'),
                 ])
