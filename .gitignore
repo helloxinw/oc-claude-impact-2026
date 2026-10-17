@@ -1,0 +1,19 @@
+# Backend
+backend/.venv/
+backend/__pycache__/
+backend/**/__pycache__/
+backend/.env
+backend/storage/*
+!backend/storage/.gitkeep
+backend/dev.db
+
+# Frontend
+frontend/node_modules/
+frontend/dist/
+
+# Local tooling (session-specific dev server config, not part of the project)
+.claude/
+
+# OS
+.DS_Store
+Thumbs.db

@@ -7,6 +7,12 @@ A hackathon starter for *synthetic* recuperative-care intake. Frontend is React 
 - Docker Desktop with Docker Compose
 - Python 3.11+
 - Node.js **22.12+** (or the current minimum supported by Vite) and npm
+- [Tesseract OCR](https://github.com/tesseract-ocr/tesseract) engine installed and on `PATH` (or at the
+  default Windows install path, `C:\Program Files\Tesseract-OCR\tesseract.exe`). Document upload runs
+  local OCR on each page before sending text to Claude.
+  Windows: `winget install --id UB-Mannheim.TesseractOCR -e` &middot; macOS: `brew install tesseract`
+  &middot; Debian/Ubuntu: `apt-get install tesseract-ocr`
+- `ANTHROPIC_API_KEY` in `backend/.env` (server-only; see `.env.example`) to use document upload
 
 ## 1. Database (terminal 1)
 
