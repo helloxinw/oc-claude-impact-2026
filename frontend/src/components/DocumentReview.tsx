@@ -1,9 +1,10 @@
 import { useEffect, useState, type ChangeEvent } from 'react'
-import { AlertTriangle, Check, CheckCircle2, CircleHelp, ExternalLink, FileWarning, Loader2, ShieldAlert, Upload, XCircle } from 'lucide-react'
+import { AlertTriangle, Check, CheckCircle2, ChevronDown, CircleHelp, FileWarning, Loader2, ShieldAlert, Upload, XCircle } from 'lucide-react'
 import { api } from '@/api'
 import type { AiDecision, Finding, FindingVerdict, Referral, ReferralDocument } from '@/types'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
+import { PdfViewer } from '@/components/PdfViewer'
 import { Progress } from '@/components/ui/progress'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
@@ -32,7 +33,7 @@ export function DocumentReview({ referral, onReferralUpdated }: { referral: Refe
   const [error, setError] = useState('')
   const [activePage, setActivePage] = useState<number | null>(null)
   const [activeFindingId, setActiveFindingId] = useState<string | null>(null)
-  const [flash, setFlash] = useState(false)
+  const [jumpSignal, setJumpSignal] = useState(0)
 
   useEffect(() => {
     let active = true
@@ -88,8 +89,7 @@ export function DocumentReview({ referral, onReferralUpdated }: { referral: Refe
     if (!finding.source_page) return
     setActiveFindingId(finding.id)
     setActivePage(finding.source_page)
-    setFlash(true)
-    window.setTimeout(() => setFlash(false), 900)
+    setJumpSignal((s) => s + 1)
   }
 
   return (
@@ -135,53 +135,15 @@ export function DocumentReview({ referral, onReferralUpdated }: { referral: Refe
 
       {!uploading && latestDocument?.status === 'processed' && (
         <div className="mt-4 grid gap-4 lg:grid-cols-2">
-          <div className="min-w-0 lg:sticky lg:top-4 lg:self-start">
-            <div className="mb-2 flex items-center justify-between">
-              <p className="text-[11px] font-semibold uppercase tracking-widest text-muted-foreground">
-                {latestDocument.filename} &middot; {activePage ? `viewing p.${activePage} of ` : ''}{latestDocument.page_count} pages
-              </p>
-              <a href={api.documentFileUrl(referral.id, latestDocument.id)} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 text-xs font-medium text-primary hover:underline">
-                Open in new tab<ExternalLink className="size-3" />
-              </a>
-            </div>
-            <iframe
-              key={`${latestDocument.id}-${activePage ?? 0}`}
-              title={`${latestDocument.filename} preview`}
-              src={`${api.documentFileUrl(referral.id, latestDocument.id)}${activePage ? `#page=${activePage}` : ''}`}
-              className={`h-[75vh] min-h-[520px] w-full rounded-lg border bg-muted/20 transition-shadow duration-300 ${flash ? 'ring-4 ring-primary/50' : ''}`}
-            />
-            <p className="mt-1.5 text-[11px] text-muted-foreground">Tip: the PDF's own outline panel (sidebar icon in the viewer toolbar) jumps straight to any page a fact or criterion came from.</p>
-          </div>
-
           <div className="min-w-0">
-            {referral.ai_decision && (
-              <div className={`mb-4 flex items-start gap-3 rounded-lg border p-3 ${decisionStyles[referral.ai_decision]}`}>
-                <DecisionIcon decision={referral.ai_decision} />
-                <div>
-                  <div className="flex flex-wrap items-center gap-2 text-sm font-semibold">
-                    {decisionLabels[referral.ai_decision]}
-                    <Badge variant="outline" className="border-current/30 bg-white/60 text-[10px] font-medium uppercase tracking-wide">AI draft &middot; needs sign-off</Badge>
-                  </div>
-                  <p className="mt-1 text-xs leading-5">{referral.ai_decision_summary}</p>
-                </div>
-              </div>
-            )}
+            {referral.ai_decision && <AiDecisionCard decision={referral.ai_decision} summary={referral.ai_decision_summary ?? ''} />}
 
-            {flagFindings.length > 0 && (
-              <div className="mb-4 space-y-2">
-                {flagFindings.map((f) => (
-                  <div key={f.id} className="flex items-start gap-2 rounded-lg border border-violet-200 bg-violet-50 p-3 text-xs text-violet-900">
-                    <ShieldAlert className="mt-0.5 size-3.5 shrink-0" />
-                    <div><b>{f.key.replace('flag:', '')} — case-by-case, never automatic.</b> {f.value}</div>
-                  </div>
-                ))}
-              </div>
-            )}
+            <FlagsPanel flags={flagFindings} />
 
             <CoordinatorDecisionPanel referral={referral} onUpdated={(r) => onReferralUpdated?.(r)} />
 
             <Tabs defaultValue="eligibility">
-              <TabsList>
+              <TabsList className="sticky top-0 z-10">
                 <TabsTrigger value="eligibility">Criteria ({reviewedCount}/{ruleFindings.length} reviewed)</TabsTrigger>
                 <TabsTrigger value="facts">Extracted facts ({fields.length})</TabsTrigger>
                 <TabsTrigger value="checklist">Checklist ({checklist.length})</TabsTrigger>
@@ -225,6 +187,17 @@ export function DocumentReview({ referral, onReferralUpdated }: { referral: Refe
               </TabsContent>
             </Tabs>
           </div>
+
+          <div className="min-w-0 lg:sticky lg:top-4 lg:self-start">
+            <PdfViewer
+              key={latestDocument.id}
+              fileUrl={api.documentFileUrl(referral.id, latestDocument.id)}
+              filename={latestDocument.filename}
+              activePage={activePage}
+              jumpSignal={jumpSignal}
+            />
+            <p className="mt-1.5 text-[11px] text-muted-foreground">Tip: click any extracted fact or criterion on the left to scroll straight to the page it came from, or jump to a page directly above. Packets opened in a new tab also carry real bookmarks in your browser's PDF outline panel.</p>
+          </div>
         </div>
       )}
     </div>
@@ -234,6 +207,53 @@ export function DocumentReview({ referral, onReferralUpdated }: { referral: Refe
 function DecisionIcon({ decision }: { decision: AiDecision }) {
   const Icon = decisionIcons[decision]
   return <Icon className="mt-0.5 size-5 shrink-0" />
+}
+
+function AiDecisionCard({ decision, summary }: { decision: AiDecision; summary: string }) {
+  const [expanded, setExpanded] = useState(false)
+  return (
+    <div className={`mb-4 flex items-start gap-3 rounded-lg border p-3 ${decisionStyles[decision]}`}>
+      <DecisionIcon decision={decision} />
+      <div className="min-w-0 flex-1">
+        <div className="flex flex-wrap items-center gap-2 text-sm font-semibold">
+          {decisionLabels[decision]}
+          <Badge variant="outline" className="border-current/30 bg-white/60 text-[10px] font-medium uppercase tracking-wide">AI draft &middot; needs sign-off</Badge>
+        </div>
+        {summary && (
+          <>
+            <p className={`mt-1 text-xs leading-5 ${expanded ? '' : 'line-clamp-2'}`}>{summary}</p>
+            <button type="button" onClick={() => setExpanded((v) => !v)} className="mt-1 text-[11px] font-medium hover:underline">
+              {expanded ? 'Show less' : 'Read full reasoning'}
+            </button>
+          </>
+        )}
+      </div>
+    </div>
+  )
+}
+
+function FlagsPanel({ flags }: { flags: Finding[] }) {
+  const [expanded, setExpanded] = useState(false)
+  if (flags.length === 0) return null
+  return (
+    <div className="mb-4 rounded-lg border border-violet-200 bg-violet-50 text-violet-900">
+      <button type="button" onClick={() => setExpanded((v) => !v)} className="flex w-full items-center gap-2 p-3 text-left text-xs">
+        <ShieldAlert className="size-3.5 shrink-0" />
+        <span className="font-semibold">{flags.length} item{flags.length === 1 ? '' : 's'} need case-by-case judgment, never automatic</span>
+        <ChevronDown className={`ml-auto size-3.5 shrink-0 transition-transform ${expanded ? 'rotate-180' : ''}`} />
+      </button>
+      {expanded && (
+        <div className="space-y-2.5 border-t border-violet-200 px-3 pb-3 pt-2.5">
+          {flags.map((f) => (
+            <div key={f.id} className="text-xs leading-5">
+              <p className="font-semibold">{f.key.replace('flag:', '')}</p>
+              <p className="mt-0.5 text-violet-800">{f.value}</p>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  )
 }
 
 function CoordinatorDecisionPanel({ referral, onUpdated }: { referral: Referral; onUpdated: (r: Referral) => void }) {
