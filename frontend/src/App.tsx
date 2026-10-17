@@ -1,6 +1,8 @@
 import { useEffect, useMemo, useState, type FormEvent } from 'react'
 import { AlertCircle, ArrowRight, CheckCircle2, ChevronRight, ClipboardList, Clock3, FilePlus2, FileSearch, Filter, HeartHandshake, LayoutDashboard, LoaderCircle, Plus, Search, ShieldCheck, Sparkles } from 'lucide-react'
 import { api } from './api'
+import { mockCriteria, samplePacketUrl } from './mockCriteria'
+import { PacketReview } from '@/components/PacketReview'
 import type { NewReferral, Referral, ReferralStatus } from './types'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -151,6 +153,7 @@ function App() {
             </div> : <CardContent className="flex min-h-72 flex-col items-center justify-center gap-3 text-center text-muted-foreground"><FilePlus2 className="size-8"/><p className="text-sm">Choose or create a referral to inspect it.</p></CardContent>}
           </Card>
         </div>
+        <PacketReview fileUrl={samplePacketUrl} criteria={mockCriteria}/>
         <footer className="flex flex-wrap justify-between gap-2 border-t pt-5 text-xs text-muted-foreground"><span>ReferralFlow · Hackathon prototype</span><span>No PHI, authentication, or production security controls</span></footer>
       </div>
     </main>

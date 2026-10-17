@@ -12,3 +12,13 @@ export interface Referral {
 }
 
 export type NewReferral = Pick<Referral, 'patient_alias' | 'hospital_name' | 'reason'>
+
+export type CriterionStatus = 'met' | 'not_met' | 'missing' | 'unclear'
+
+export interface CriterionResult {
+  id: string
+  name: string
+  status: CriterionStatus
+  evidence: string
+  page: number
+}

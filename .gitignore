@@ -1,0 +1,9 @@
+.DS_Store
+node_modules/
+dist/
+__pycache__/
+.venv/
+.env
+
+# Sample referral packets stay local; only synthetic data may be committed
+frontend/public/samples/
